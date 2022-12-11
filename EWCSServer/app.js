@@ -18,7 +18,7 @@ import isOnline from 'is-online';
 
 // import ffmpeg from 'ffmpeg';
 
-import extractFrame  from 'ffmpeg-extract-frame';
+
 
 import fs from  'fs';
 
@@ -36,9 +36,9 @@ app.get('/', (req, res) => {
     
   })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// })
 
 
 // 시리얼 포트 리스팅 하기
@@ -146,7 +146,7 @@ function checkNetworkConnection() {
        });
 }
 
-function readADC() {
+export function readADC() {
     cs125Current.read((err, reading) => {
         if (err) throw err;
         console.log('cs125 Current: '+ parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3) + ' A');
@@ -169,6 +169,8 @@ function readADC() {
     
     console.log('RPI CPU Temp: ' + readTemp() + ' C');  
     console.log(' ');
+
+    return readTemp();
 }
 
 function readTemp() {
@@ -177,29 +179,17 @@ function readTemp() {
     return temp_c;
 }
 
-async function f1() {
-    let path = './'+Date.now()+'.jpg';
-    try {
-        await extractFrame({
-                input: 'rtsp://admin:kopriControl2022@192.168.0.110:554/Streaming/Channels/101',
-                quality: 31,
-                output: path
-            });
-    }  catch (e) {
-        console.log(e);
-    }
-}
 
-f1();
+
+//f1();
 
 // 주기적으로 실행하기
 setInterval(sendHeartbeat, 1000);
 
-setInterval(readADC, 1000);
+//setInterval(readADC, 1000);
 
 setInterval(checkNetworkConnection, 5000);
 
-setInterval(f1,100000);
 
 
 
