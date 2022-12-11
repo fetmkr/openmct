@@ -1,0 +1,23 @@
+{
+  "name": "EWCSServer",
+  "version": "1.0.0",
+  "description": "test codes for EWCS Controller",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "hojun",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "crc": "^4.1.1",
+    "express": "^4.18.2",
+    "ffmpeg": "^0.0.4",
+    "ffmpeg-extract-frame": "^1.0.2",
+    "ffmpeg-extract-frames": "^2.0.2",
+    "is-online": "^10.0.0",
+    "mcp-spi-adc": "^3.2.0",
+    "onoff": "^6.0.3",
+    "serialport": "^10.5.0"
+  }
+}
