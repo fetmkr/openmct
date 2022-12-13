@@ -24,6 +24,14 @@ import fs from  'fs';
 
 
 
+let adcData = {
+    cs125Current : 0,
+    iridiumCurrent : 0,
+    poeCurrent : 0,
+    inputVoltage : 0,
+    rpiTemp: 0
+};
+
 app.get('/DATAIN', (req, res) => {
   //res.send('Hello World!')
   //console.log('datain get requested')
@@ -147,30 +155,37 @@ function checkNetworkConnection() {
 }
 
 export function readADC() {
-    cs125Current.read((err, reading) => {
+
+
+cs125Current.read((err, reading) => {
         if (err) throw err;
-        console.log('cs125 Current: '+ parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3) + ' A');
+        adcData.cs125Current = parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3);
+        console.log('cs125 Current: '+ adcData.cs125Current + ' A');
     });
     iridiumCurrent.read((err, reading) => {
         if (err) throw err;
-        console.log('iridium Current: '+ parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3) + ' A');
+        adcData.iridiumCurrent = parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3);
+        console.log('iridium Current: '+ adcData.iridiumCurrent + ' A');
     });
     poeCurrent.read((err, reading) => {
         if (err) throw err;
-        console.log('poe Current: '+ parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3) + ' A');
+        adcData.poeCurrent = parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3);
+        console.log('poe Current: '+ adcData.poeCurrent + ' A');
 
     });
     inputVoltage.read((err, reading) => {
         if (err) throw err;
-  
-        console.log('Input Voltage: ' + parseFloat((reading.rawValue * 3.3 / 1024) * 46 / 10).toFixed(3)+' V');
+        adcData.inputVoltage = parseFloat((reading.rawValue * 3.3 / 1024) * 46 / 10).toFixed(3);
+        console.log('Input Voltage: ' + adcData.inputVoltage +' V');
         // console.log(reading.rawValue);
       });
     
-    console.log('RPI CPU Temp: ' + readTemp() + ' C');  
+    adcData.rpiTemp = readTemp();
+
+    console.log('RPI CPU Temp: ' + adcData.rpiTemp + ' C');  
     console.log(' ');
 
-    return readTemp();
+    return adcData;
 }
 
 function readTemp() {

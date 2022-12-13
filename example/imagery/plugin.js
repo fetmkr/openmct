@@ -20,26 +20,47 @@
  * at runtime from the About dialog for additional information.
  *****************************************************************************/
 
+// const DEFAULT_IMAGE_SAMPLES = [
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18731.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18732.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18733.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18734.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18735.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18736.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18737.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18738.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18739.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18740.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18741.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18742.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18743.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18744.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18745.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18746.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18747.jpg",
+//     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18748.jpg"
+// ];
+
 const DEFAULT_IMAGE_SAMPLES = [
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18731.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18732.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18733.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18734.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18735.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18736.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18737.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18738.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18739.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18740.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18741.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18742.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18743.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18744.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18745.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18746.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18747.jpg",
-    "https://www.hq.nasa.gov/alsj/a16/AS16-117-18748.jpg"
-];
+    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
+    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg"]
+
 const DEFAULT_IMAGE_LOAD_DELAY_IN_MILISECONDS = 20000;
 const MIN_IMAGE_LOAD_DELAY_IN_MILISECONDS = 5000;
 
@@ -153,13 +174,14 @@ function getCompassValues(min, max) {
     return min + Math.random() * (max - min);
 }
 
-function getImageSamples(configuration) {
+async function getImageSamples(configuration) {
     let imageSamples = DEFAULT_IMAGE_SAMPLES;
-
-    if (configuration.imageLocation && configuration.imageLocation.length) {
-        imageSamples = getImageUrlListFromConfig(configuration);
-    }
-
+    // if (configuration.imageLocation && configuration.imageLocation.length) {
+    //     imageSamples = getImageUrlListFromConfig(configuration);
+    // }
+    const response = await http.get('http://192.168.0.239:8080/ewcs.image/last/16');
+    imageSamples = response.data;
+    //console.log(imageSamples);
     return imageSamples;
 }
 
@@ -189,8 +211,8 @@ function getRealtimeProvider() {
         supportsSubscribe: domainObject => domainObject.type === 'example.imagery',
         subscribe: (domainObject, callback) => {
             const delay = getImageLoadDelay(domainObject);
-            const interval = setInterval(() => {
-                const imageSamples = getImageSamples(domainObject.configuration);
+            const interval = setInterval(async () => {
+                const imageSamples = await getImageSamples(domainObject.configuration);
                 const datum = pointForTimestamp(Date.now(), domainObject.name, imageSamples, delay);
                 callback(datum);
             }, delay);
@@ -208,13 +230,14 @@ function getHistoricalProvider() {
             return domainObject.type === 'example.imagery'
                 && options.strategy !== 'latest';
         },
-        request: (domainObject, options) => {
+        request: async (domainObject, options) => {
             const delay = getImageLoadDelay(domainObject);
             let start = options.start;
             const end = Math.min(options.end, Date.now());
             const data = [];
             while (start <= end && data.length < delay) {
-                data.push(pointForTimestamp(start, domainObject.name, getImageSamples(domainObject.configuration), delay));
+                const imageSamples = await getImageSamples(domainObject.configuration);
+                data.push(pointForTimestamp(start, domainObject.name, imageSamples, delay));
                 start += delay;
             }
 
@@ -229,9 +252,10 @@ function getLadProvider() {
             return domainObject.type === 'example.imagery'
                 && options.strategy === 'latest';
         },
-        request: (domainObject, options) => {
+        request: async (domainObject, options) => {
             const delay = getImageLoadDelay(domainObject);
-            const datum = pointForTimestamp(Date.now(), domainObject.name, getImageSamples(domainObject.configuration), delay);
+            const imageSamples = await getImageSamples(domainObject.configuration)
+            const datum = pointForTimestamp(Date.now(), domainObject.name, imageSamples, delay);
 
             return Promise.resolve([datum]);
         }

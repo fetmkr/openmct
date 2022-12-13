@@ -11,7 +11,19 @@ export default function Spacecraft() {
         "comms.sent": 0,
         "pwr.temp": 245,
         "pwr.c": 8.15,
-        "pwr.v": 30
+        "pwr.v": 30,
+        "ewcs.cs125.current": 0,
+        "ewcs.cs125.visibility": 0,
+        "ewcs.cs125.temp": 0,
+        "ewcs.cs125.humidity": 0,
+        "ewcs.rn171.temp": 0,
+        "ewcs.rn171.humidity": 0,
+        "ewcs.poe.current": 0,
+        "ewcs.iridium.current": 0,
+        "ewcs.rpi.temp": 0,
+        "ewcs.battery.voltage": 0,
+        "ewcs.mode": "normal",
+
     };
     this.history = {};
     this.listeners = [];
@@ -50,7 +62,18 @@ Spacecraft.prototype.updateState = function () {
         this.state["pwr.c"] = this.state["pwr.c"] * 0.985;
     }
     //this.state["pwr.v"] = 30 + Math.pow(Math.random(), 3);
-    this.state["pwr.v"] = readADC();
+    const data = readADC();
+    this.state["ewcs.cs125.current"] = data.cs125Current;
+    this.state["ewcs.cs125.visibility"] = data.cs125Current;
+    this.state["ewcs.cs125.temp"] = data.cs125Current;
+    this.state["ewcs.cs125.humidity"] = data.cs125Current;
+    this.state["ewcs.rn171.temp"] = data.cs125Current;
+    this.state["ewcs.rn171.humidity"] = data.cs125Current;
+    this.state["ewcs.poe.current"] = data.poeCurrent;
+    this.state["ewcs.iridium.current"] = data.iridiumCurrent;
+    this.state["ewcs.rpi.temp"] = data.rpiTemp;
+    this.state["ewcs.battery.voltage"] = data.inputVoltage;
+    this.state["ewcs.mode"] = data.cs125Current;   
 
 };
 

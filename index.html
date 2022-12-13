@@ -27,6 +27,12 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <title></title>
         <script src="dist/openmct.js"></script>
+        <script src="lib/http.js"></script>
+
+        <script src="ewcs-plugin.js"></script>
+        <script src="ewcs-historical-plugin.js"></script>
+        <script src="ewcs-realtime-plugin.js"></script>
+
         <link rel="icon" type="image/png" href="dist/favicons/favicon-96x96.png" sizes="96x96" type="image/x-icon">
         <link rel="icon" type="image/png" href="dist/favicons/favicon-32x32.png" sizes="32x32" type="image/x-icon">
         <link rel="icon" type="image/png" href="dist/favicons/favicon-16x16.png" sizes="16x16" type="image/x-icon">
@@ -198,6 +204,9 @@
         openmct.install(openmct.plugins.Timelist());
         openmct.install(openmct.plugins.BarChart());
         openmct.install(openmct.plugins.ScatterPlot());
+        openmct.install(DictionaryPlugin());
+        openmct.install(HistoricalTelemetryPlugin());
+        openmct.install(RealtimeTelemetryPlugin());
         openmct.start();
     </script>
 </html>
