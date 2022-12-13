@@ -23,4 +23,3 @@ export default function ImageServer() {
     return router;
 }
 
-//module.exports = StaticServer;

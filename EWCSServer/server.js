@@ -2,7 +2,10 @@
  * Basic implementation of a history and realtime server.
  */
 
-import Spacecraft from './spacecraft.js';
+// import EWCS from './ewcs.js';
+
+import {EWCS, updateRN171} from './ewcs.js'
+
 import RealtimeServer from './realtime-server.js';
 import HistoryServer from './history-server.js';
 import StaticServer from './static-server.js';
@@ -16,9 +19,9 @@ const app = express();
 
 expressWs(app);
 
-var spacecraft = new Spacecraft();
-var realtimeServer = new RealtimeServer(spacecraft);
-var historyServer = new HistoryServer(spacecraft);
+var ewcs = new EWCS();
+var realtimeServer = new RealtimeServer(ewcs);
+var historyServer = new HistoryServer(ewcs);
 var imageServer = new ImageServer();
 var staticServer = new StaticServer();
 
@@ -26,6 +29,14 @@ app.use('/realtime', realtimeServer);
 app.use('/history', historyServer);
 app.use('/ewcs.image', imageServer);
 app.use('/', staticServer);
+
+app.get('/DATAIN', (req, res) => {
+    //updateRN171(req.query.sd1, req.query.sd2);
+    //console.log(req);
+    //res.send('Hello World!')
+    //console.log('datain get requested')
+    updateRN171(req.query.sd2, req.query.sd1);
+})
 
 
 var port = process.env.PORT || 8080
