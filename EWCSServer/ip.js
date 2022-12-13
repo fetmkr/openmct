@@ -23,7 +23,6 @@ export const changeSystemIp = (ip, gateway) => {
 };
 
 export const changeCouchDbIp = (ip) => {
-  // Change IP and Gateway in .env
   readFile('../index.html', 'utf-8', function (err, contents) {
     if (err) {
       console.log(err);
@@ -50,5 +49,5 @@ export const getPublicIp = async () => {
 //changeSystemIp('192.168.0.119', '192.168.0.1')
 //import dotenv from "dotenv";
 //dotenv.config();
-console.log(process.env.IP)
-changeCouchDbIp(process.env.IP)
+//console.log(process.env.IP)
+//changeCouchDbIp(process.env.IP)

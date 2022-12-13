@@ -1,6 +1,8 @@
 import express from 'express';
 import { DB } from './db.js';
 import { iridiumOn,iridiumOff } from './ewcs.js';
+import { reboot } from './reboot.js';
+import { changeSystemIp, getPublicIp } from './ip.js';
 
 export default function ApiServer(ewcsData, ewcsImageData) {
   var router = express.Router();
@@ -61,5 +63,26 @@ export default function ApiServer(ewcsData, ewcsImageData) {
           res.status(200).json(response).end();
       });
       
+      router.get('/reboot', function(req, res) {
+          const result = reboot();
+        return res.json({ result: `request reboot of raspberry pi is ${result}` })
+      });
+
+      router.get('/set/ip', function(req, res) {
+        const ip = req.query.ip
+        const gateway = req.query.gateway
+        let result = false
+        if (ip && gateway) {
+          result = changeSystemIp(`${ip}`, `${gateway}`)
+        }
+      return res.json({ result: `new raspberry pi is ${result}` })
+     });
+ 
+     router.get('/get/ip', async function(req, res) {
+      const ip = await getPublicIp();
+        return res.json({ip: `${ip}`});
+     })
+
+
       return router;
     }
