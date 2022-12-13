@@ -4,6 +4,7 @@
   "description": "test codes for EWCS Controller",
   "main": "app.js",
   "scripts": {
+    "start": "IP=\"$(hostname  -I | cut -f1 -d' ')\" node ip.js && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "hojun",
@@ -22,6 +23,7 @@
     "mcp-spi-adc": "^3.2.0",
     "nano": "^10.1.0",
     "onoff": "^6.0.3",
+    "public-ip": "^6.0.1",
     "serialport": "^10.5.0"
   }
 }
