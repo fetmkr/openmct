@@ -1,18 +1,16 @@
 {
-    "name": "Example Spacecraft",
-    "key": "sc",
+    "name": "EWCS Controller",
+    "key": "kopri.ewcs",
     "measurements": [
         {
-            "name": "Fuel",
-            "key": "prop.fuel",
+            "name": "CS125 Current",
+            "key": "ewcs.cs125.current",
             "values": [
                 {
                     "key": "value",
-                    "name": "Value",
-                    "unit": "kilograms",
+                    "name": "A",
+                    "unit": "A",
                     "format": "float",
-                    "min": 0,
-                    "max": 100,
                     "hints": {
                         "range": 1
                     }
@@ -29,46 +27,13 @@
             ]
         },
         {
-            "name": "Thrusters",
-            "key": "prop.thrusters",
+            "name": "CS125 Visibility",
+            "key": "ewcs.cs125.visibility",
             "values": [
                 {
                     "key": "value",
-                    "name": "Value",
-                    "format": "enum",
-                    "enumerations": [
-                        {
-                            "string": "ON",
-                            "value": 1
-                        },
-                        {
-                            "string": "OFF",
-                            "value": 0
-                        }
-                    ],
-                    "hints": {
-                        "range": 1
-                    }
-                },
-                {
-                    "key": "utc",
-                    "source": "timestamp",
-                    "name": "Timestamp",
-                    "format": "utc",
-                    "hints": {
-                        "domain": 1
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Received",
-            "key": "comms.recd",
-            "values": [
-                {
-                    "key": "value",
-                    "name": "Value",
-                    "unit": "bytes",
+                    "name": "Meter",
+                    "unit": "Meter",
                     "format": "integer",
                     "hints": {
                         "range": 1
@@ -86,13 +51,13 @@
             ]
         },
         {
-            "name": "Sent",
-            "key": "comms.sent",
+            "name": "CS125 SYNOP Code",
+            "key": "ewcs.cs125.SYNOP",
             "values": [
                 {
                     "key": "value",
                     "name": "Value",
-                    "unit": "bytes",
+                    "unit": "Value",
                     "format": "integer",
                     "hints": {
                         "range": 1
@@ -110,8 +75,8 @@
             ]
         },
         {
-            "name": "Generator Temperature",
-            "key": "pwr.temp",
+            "name": "CS125 Temperature",
+            "key": "ewcs.cs125.temp",
             "values": [
                 {
                     "key": "value",
@@ -134,13 +99,13 @@
             ]
         },
         {
-            "name": "Generator Current",
-            "key": "pwr.c",
+            "name": "CS125 Relative Humidity",
+            "key": "ewcs.cs125.humidity",
             "values": [
                 {
                     "key": "value",
                     "name": "Value",
-                    "unit": "Amps",
+                    "unit": "%",
                     "format": "float",
                     "hints": {
                         "range": 1
@@ -158,13 +123,13 @@
             ]
         },
         {
-            "name": "CPU Temperature",
-            "key": "pwr.v",
+            "name": "RN171 Temperature",
+            "key": "ewcs.rn171.temp",
             "values": [
                 {
                     "key": "value",
                     "name": "Value",
-                    "unit": "C",
+                    "unit": "℃",
                     "format": "float",
                     "hints": {
                         "range": 1
@@ -180,6 +145,160 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "RN171 Humidity",
+            "key": "ewcs.rn171.humidity",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "unit": "%",
+                    "format": "float",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Iridium Current",
+            "key": "ewcs.iridium.current",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "A",
+                    "unit": "A",
+                    "format": "float",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "POE Current",
+            "key": "ewcs.poe.current",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "A",
+                    "unit": "A",
+                    "format": "float",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Battery Voltage",
+            "key": "ewcs.battery.voltage",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "V",
+                    "unit": "V",
+                    "format": "float",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "RPI CPU Temperature",
+            "key": "ewcs.rpi.temp",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "unit": "℃",
+                    "format": "float",
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "EWCS Mode",
+            "key": "ewcs.mode",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "format": "enum",
+                    "enumerations": [
+                        {
+                            "string": "normal",
+                            "value": 1
+                        },
+                        {
+                            "string": "emergency",
+                            "value": 0
+                        }
+                    ],
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
         }
+
     ]
 }

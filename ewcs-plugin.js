@@ -8,7 +8,7 @@ function getDictionary() {
 var objectProvider = {
     get: function (identifier) {
         return getDictionary().then(function (dictionary) {
-            if (identifier.key === 'spacecraft') {
+            if (identifier.key === 'kopri.ewcs') {
                 return {
                     identifier: identifier,
                     name: dictionary.name,
@@ -26,7 +26,7 @@ var objectProvider = {
                     telemetry: {
                         values: measurement.values
                     },
-                    location: 'example.taxonomy:spacecraft'
+                    location: 'example.taxonomy:kopri.ewcs'
                 };
             }
         });
@@ -55,7 +55,7 @@ var DictionaryPlugin = function (openmct) {
     return function install(openmct) {
         openmct.objects.addRoot({
             namespace: 'example.taxonomy',
-            key: 'spacecraft'
+            key: 'kopri.ewcs'
         });
 
         openmct.objects.addProvider('example.taxonomy', objectProvider);

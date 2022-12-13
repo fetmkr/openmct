@@ -214,6 +214,7 @@ let iridiumState = 0;
 
 port3.on('data', function(data){
     iridiumResponse = data;
+    console.log("iridium respons: " + iridiumResponse);
 
 });
 

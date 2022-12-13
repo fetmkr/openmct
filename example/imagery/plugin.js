@@ -41,25 +41,7 @@
 //     "https://www.hq.nasa.gov/alsj/a16/AS16-117-18748.jpg"
 // ];
 
-const DEFAULT_IMAGE_SAMPLES = [
-    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670770502721.jpg",
-    "http://192.168.0.239:8080/ewcs.image/1670769219399.jpg"]
+const DEFAULT_IMAGE_SAMPLES = [];
 
 const DEFAULT_IMAGE_LOAD_DELAY_IN_MILISECONDS = 20000;
 const MIN_IMAGE_LOAD_DELAY_IN_MILISECONDS = 5000;
