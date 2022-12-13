@@ -10,5 +10,3 @@ export default function StaticServer() {
 
     return router
 }
-
-//module.exports = StaticServer;

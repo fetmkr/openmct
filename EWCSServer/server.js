@@ -35,7 +35,7 @@ app.get('/DATAIN', (req, res) => {
     //console.log(req);
     //res.send('Hello World!')
     //console.log('datain get requested')
-    updateRN171(req.query.sd2, req.query.sd1);
+    updateRN171(req.query.sd1, req.query.sd2);
 })
 
 
