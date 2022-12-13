@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EWCS Config</title>
+    <script src="../lib/http.js"></script>
+
+</head>
+<body>
+    <button  id = "iridiumBtn" onclick="iridiumOn()">Iridium On</button>
+    <button onclick="iridiumOff()">Iridium Off</button>
+
+    
+</body>
+<script>
+function iridiumOn() {
+    http.get('/api/set/iridium?on=1')
+    .then(function(resp){
+        console.log(resp.data);
+        return resp.data;
+    });
+}
+
+function iridiumOff() {
+    http.get('/api/set/iridium?on=0')
+    .then(function(resp){
+        console.log(resp.data);
+        return resp.data;
+    });
+}
+</script>
+</html>

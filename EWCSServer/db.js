@@ -1,6 +1,6 @@
 import Nano  from 'nano'
 
-let nano = Nano('http://admin:admin@127.0.0.1:5984')
+let nano = Nano('http://admin:ewcs@127.0.0.1:5984')
 
 function DB() {
   let _db = null;

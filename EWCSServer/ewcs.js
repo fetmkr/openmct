@@ -21,7 +21,7 @@ const job = new CronJob.CronJob(
 
 let ewcsData = {
     stationName: "KOPRI",
-    timecode: 0,
+    timestamp: 0,
     cs125Current : 0,
     cs125Visibility: 0,
     cs125SYNOP: 0,
@@ -37,7 +37,7 @@ let ewcsData = {
 };
 
 function setEWCSTime(){
-    ewcsData.timecode = Date.now();
+    ewcsData.timestamp = Date.now();
 }
 
 function updateRN171(temp, humidity){
@@ -326,6 +326,18 @@ function sendIridium(){
 
 }
 
+function iridiumOn(){
+    port0.write('I');
+    console.log('iridium on')
+
+}
+
+function iridiumOff(){
+    port0.write('i');
+    console.log('iridium off')
+
+}
+
 
 function EWCS(db) {
     this.state = {
@@ -353,7 +365,7 @@ function EWCS(db) {
     setInterval(function () {
         this.updateState();
         this.generateTelemetry();
-        ewcsLog();
+        //ewcsLog();
     }.bind(this), 1000);
 
     setInterval(function () {
@@ -410,4 +422,4 @@ EWCS.prototype.listen = function (listener) {
 setInterval(sendHeartbeat, 1000);
 setInterval(checkNetworkConnection, 5000);
 
-export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog};
+export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog, iridiumOn, iridiumOff};

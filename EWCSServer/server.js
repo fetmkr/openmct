@@ -35,7 +35,7 @@ const main = async () => {
     
     app.use('/realtime', realtimeServer);
     app.use('/history', historyServer);
-    app.use('/ewcs.image', imageServer);
+    app.use('/image', imageServer);
     app.use('/api', apiServer);
     app.use('/', staticServer);
     

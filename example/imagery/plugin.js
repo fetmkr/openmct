@@ -161,7 +161,7 @@ async function getImageSamples(configuration) {
     // if (configuration.imageLocation && configuration.imageLocation.length) {
     //     imageSamples = getImageUrlListFromConfig(configuration);
     // }
-    const response = await http.get('http://192.168.0.239:8080/ewcs.image/last/16');
+    const response = await http.get('/image/last/16');
     imageSamples = response.data;
     //console.log(imageSamples);
     return imageSamples;
