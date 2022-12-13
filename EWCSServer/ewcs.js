@@ -80,8 +80,8 @@ parser2.on('data', (line) => {
         //console.log('CS125 full SYNOP message');
         ewcsData.cs125Visibility = parseInt(data[4]);
         ewcsData.cs125SYNOP = parseInt(data[23]);
-        ewcsData.cs125Temp = parseInt(data[24]); 
-        ewcsData.cs125Humidity = parseInt(data[25]); 
+        ewcsData.cs125Temp = parseFloat(data[24]); 
+        ewcsData.cs125Humidity = parseFloat(data[25]); 
     }
 });
 
@@ -353,7 +353,7 @@ function EWCS(db) {
     setInterval(function () {
         this.updateState();
         this.generateTelemetry();
-        //ewcsLog();
+        ewcsLog();
     }.bind(this), 1000);
 
     setInterval(function () {
@@ -404,7 +404,7 @@ EWCS.prototype.listen = function (listener) {
     }.bind(this);
 };
 
-sendIridium();
+//sendIridium();
 
 // 주기적으로 실행하기
 setInterval(sendHeartbeat, 1000);
