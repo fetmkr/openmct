@@ -1,20 +1,11 @@
-// const { SerialPort } = require('serialport')
+import { DB } from './db.js';
 import { SerialPort, ReadlineParser  } from 'serialport';
-
-// const adc = require('mcp-spi-adc')
 import adc from 'mcp-spi-adc';
-
-// const Gpio = require('onoff').Gpio
 import { Gpio } from 'onoff';
 const LED = new Gpio(16, 'out')
-
-// const isOnline = require('is-online')
 import isOnline from 'is-online';
-
 import crc16ccitt from 'crc/crc16ccitt';
-
 import fs from  'fs';
-
 import CronJob from 'cron';
 
 const job = new CronJob.CronJob(
@@ -27,7 +18,6 @@ const job = new CronJob.CronJob(
 	true,
 	'Asia/Seoul'
 );
-
 
 let ewcsData = {
     stationName: "KOPRI",
@@ -49,7 +39,6 @@ let ewcsData = {
 function setEWCSTime(){
     ewcsData.timecode = Date.now();
 }
-
 
 function updateRN171(temp, humidity){
     ewcsData.rn171Temp = temp;
@@ -338,7 +327,7 @@ function sendIridium(){
 }
 
 
-function EWCS() {
+function EWCS(db) {
     this.state = {
         "ewcs.cs125.current": 0,
         "ewcs.cs125.visibility": 0,
@@ -354,6 +343,7 @@ function EWCS() {
         "ewcs.mode": "normal",
 
     };
+    this.db = db;
     this.history = {};
     this.listeners = [];
     Object.keys(this.state).forEach(function (k) {
@@ -366,6 +356,10 @@ function EWCS() {
         //ewcsLog();
     }.bind(this), 1000);
 
+    setInterval(function () {
+        new DB().insertAsync(db, { ... ewcsData });
+    }.bind(this), 60*1000);
+ 
 };
 
 EWCS.prototype.updateState = function () {
@@ -383,9 +377,8 @@ EWCS.prototype.updateState = function () {
     this.state["ewcs.battery.voltage"] = ewcsData.batteryVoltage;
     this.state["ewcs.mode"] = ewcsData.mode;  
     
-    //setEWCSTime();
+    setEWCSTime();
 };
-
 
 EWCS.prototype.generateTelemetry = function () {
     var timestamp = Date.now(), sent = 0;
@@ -411,13 +404,10 @@ EWCS.prototype.listen = function (listener) {
     }.bind(this);
 };
 
-
 sendIridium();
-
 
 // 주기적으로 실행하기
 setInterval(sendHeartbeat, 1000);
 setInterval(checkNetworkConnection, 5000);
-
 
 export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog};

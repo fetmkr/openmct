@@ -17,6 +17,7 @@
     "ffmpeg": "^0.0.4",
     "ffmpeg-extract-frame": "^1.0.2",
     "ffmpeg-extract-frames": "^2.0.2",
+    "glob": "^8.0.3",
     "is-online": "^10.0.0",
     "mcp-spi-adc": "^3.2.0",
     "nano": "^10.1.0",
