@@ -18,7 +18,7 @@ import fs from  'fs';
 import CronJob from 'cron';
 
 const job = new CronJob.CronJob(
-	'0 0 * * * *',
+	'0 0 * * * ',
 	function() {
         sendIridium();
 		console.log('You will see this message every second');
@@ -88,7 +88,7 @@ parser2.on('data', (line) => {
     // data[0] 이 2 바이트라 접근을 다음과 같이 했다 data[0][0] = 0x02, data[0][1] = 5 (full SYNOP)
     if(parseInt(data[0][1]) == 5)
     {
-        console.log('CS125 full SYNOP message');
+        //console.log('CS125 full SYNOP message');
         ewcsData.cs125Visibility = parseInt(data[4]);
         ewcsData.cs125SYNOP = parseInt(data[23]);
         ewcsData.cs125Temp = parseInt(data[24]); 
@@ -157,12 +157,10 @@ function checkNetworkConnection() {
     isOnline().then(online => {
         if(online){
             LED.writeSync(1);
-            console.log("Connected to internet");
-            console.log(' ');
+            //console.log("Connected to internet");
         }else{
             LED.writeSync(0);
             console.log("Not connected to internet");
-            console.log(' ');
         }
        });
 }
@@ -214,7 +212,7 @@ let iridiumState = 0;
 
 port3.on('data', function(data){
     iridiumResponse = data;
-    console.log("iridium respons: " + iridiumResponse);
+    console.log("iridium response: " + iridiumResponse);
 
 });
 
@@ -314,19 +312,25 @@ function sendIridium(){
 
 
     let sendCnt = 0;
+    port3.write(iridiumData);
+    sendCnt++;
+    console.log("Iridium data send requested: " + sendCnt + " th times");
+
     const intervalID = setInterval(function(){
 
-        if(iridiumResponse.length == 1 && iridiumResponse[0] == 0x0A && sendCnt > 1){
-            console.log("irdium data sent successfully.");
+
+        if(iridiumResponse && iridiumResponse.length == 1 && iridiumResponse[0] == 0x0A && sendCnt > 1){
+            console.log("iridium data sent successfully.");
             clearInterval(intervalID);
             return;
         }
 
         port3.write(iridiumData);
         sendCnt++;
-        console.log("Irdium data send requested: " + sendCnt + " th times");
 
-        if(sendCnt>10) {
+        console.log("Iridium data send requested: " + sendCnt + " th times");
+
+        if(sendCnt > 10) {
             clearInterval(intervalID);
         }
     }, 5*60*1000);
@@ -359,7 +363,7 @@ function EWCS() {
     setInterval(function () {
         this.updateState();
         this.generateTelemetry();
-        ewcsLog();
+        //ewcsLog();
     }.bind(this), 1000);
 
 };
@@ -379,8 +383,6 @@ EWCS.prototype.updateState = function () {
     this.state["ewcs.battery.voltage"] = ewcsData.batteryVoltage;
     this.state["ewcs.mode"] = ewcsData.mode;  
     
-    sendIridium();
-
     //setEWCSTime();
 };
 
@@ -391,7 +393,6 @@ EWCS.prototype.generateTelemetry = function () {
         var state = { timestamp: timestamp, value: this.state[id], id: id};
         this.notify(state);
         this.history[id].push(state);
-        //this.state["comms.sent"] += JSON.stringify(state).length;
     }, this);
 };
 
@@ -411,8 +412,12 @@ EWCS.prototype.listen = function (listener) {
 };
 
 
+sendIridium();
+
+
 // 주기적으로 실행하기
 setInterval(sendHeartbeat, 1000);
 setInterval(checkNetworkConnection, 5000);
+
 
 export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog};
