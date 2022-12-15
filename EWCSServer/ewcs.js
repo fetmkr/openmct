@@ -12,7 +12,7 @@ const job = new CronJob.CronJob(
 	'0 0 * * * ',
 	function() {
         sendIridium();
-		console.log('You will see this message every second');
+		console.log('You will see this message every 24 hour');
 	},
 	null,
 	true,
@@ -337,6 +337,31 @@ function iridiumOff(){
     console.log('iridium off')
 
 }
+
+function cs125On(){
+    port0.write('C');
+    console.log('cs125 on')
+
+}
+
+function cs125Off(){
+    port0.write('c');
+    console.log('cs125 off')
+
+}
+
+function poeOn(){
+    port0.write('P');
+    console.log('poe on')
+
+}
+
+function poeOff(){
+    port0.write('p');
+    console.log('poe off')
+
+}
+
 
 
 function EWCS(db) {
