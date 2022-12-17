@@ -1,7 +1,6 @@
 /**
  * Basic historical telemetry plugin.
  */
-
 function HistoricalTelemetryPlugin() {
     return function install (openmct) {
         var provider = {

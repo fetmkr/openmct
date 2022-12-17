@@ -197,11 +197,56 @@ function ewcsLog() {
 }
 
 let iridiumResponse;
-let iridiumState = 0;
+let iridiumState = 0; // 0: standby, 1: data sent, 2: 0x06 ack received, 3: 0x06 -> 0x08 success received, 4: 0x06 -> 0x08 -> 0x0a end received
+let sendCnt = 0;
+let intervalID=0;
 
 port3.on('data', function(data){
     iridiumResponse = data;
-    console.log("iridium response: " + iridiumResponse);
+    if (iridiumResponse.length == 1) {
+
+
+        console.log("iridium response 1 byte: " + iridiumResponse[0].toString(16));
+
+        switch (iridiumResponse[0]){
+            case 0x06:
+                if(iridiumState == 1) {
+                    iridiumState =2;
+                    console.log("ack received");
+                }
+                break;
+            case 0x08:
+                if(iridiumState == 2) {
+                    iridiumState = 3;
+                    console.log("ack + success received");
+                }
+                break;
+            case 0x0a:
+                if(iridiumState == 3) {
+
+                    console.log("ack + success + end received");
+                    console.log("iridium data sent successfully.");
+                    clearInterval(intervalID);
+                    sendCnt = 0;
+                    iridiumState = 0;
+                }
+                break;
+            default:
+                break;
+        }
+
+
+
+        // if(iridiumResponse[0] == 0x0a && sendCnt >= 1){
+        //     sendCnt = 0;
+        //     console.log("iridium data sent successfully.");
+        //     clearInterval(intervalID);
+        // }
+
+    }
+    else{
+        console.log("iridium response: " + iridiumResponse);
+    }
 
 });
 
@@ -279,17 +324,38 @@ function sendIridium(){
     modeBuffer
     ]);
 
+
+
+    let sumc = 0;
+
+    sumc = iridiumData.reduce((accumulator, value) => {
+        return accumulator + value;
+    },0);
+
+    //console.log("sumc "+sumc);
+
+
+
     let dataLen = iridiumData.length;
     let dataLenBuffer = Buffer.allocUnsafe(1);
     dataLenBuffer.writeUInt8(dataLen);
+    console.log("data length: "+dataLen);
+    console.log("data length buffer: "+ dataLenBuffer[0].toString(16));
 
-    let iridiumCRC = crc16ccitt(iridiumData);
+
+
+
+    // let iridiumCRC = crc16ccitt(iridiumData);
     let iridiumCRCBuffer = Buffer.allocUnsafe(2);
-    iridiumCRCBuffer.writeUInt16BE(iridiumCRC);
+    iridiumCRCBuffer[0] = sumc / 256;
+    iridiumCRCBuffer[1] = sumc % 256;
+
+
+    // iridiumCRCBuffer.writeUInt16BE(iridiumCRC);
 
     iridiumData = Buffer.concat([Buffer.from([0xff,0xff,0xff]), dataLenBuffer,iridiumCRCBuffer,iridiumData]);
-    //console.log(iridiumData);
-    //console.log(iridiumData.length);
+    console.log(iridiumData);
+    console.log(iridiumData.length);
 
     // check if iridium edge pro is ready to send the data
     // Is booted? 
@@ -300,27 +366,35 @@ function sendIridium(){
     // 0x0A?
 
 
-    let sendCnt = 0;
+    sendCnt = 0;
+    iridiumState = 0;
+
     port3.write(iridiumData);
     sendCnt++;
+    iridiumState = 1;
     console.log("Iridium data send requested: " + sendCnt + " th times");
 
-    const intervalID = setInterval(function(){
+    intervalID = setInterval(function(){
+        iridiumState = 0;
 
-
-        if(iridiumResponse && iridiumResponse.length == 1 && iridiumResponse[0] == 0x0A && sendCnt > 1){
-            console.log("iridium data sent successfully.");
-            clearInterval(intervalID);
-            return;
-        }
+        // if(iridiumResponse && iridiumResponse.length == 1 && iridiumResponse[0] == 0x0a && iridiumState == 1){
+        //     sendCnt = 0;
+        //     iridiumState = 0;
+        //     console.log("iridium data sent successfully.");
+        //     clearInterval(intervalID);
+        //     return;
+        // }
 
         port3.write(iridiumData);
+        iridiumState = 1;
         sendCnt++;
 
         console.log("Iridium data send requested: " + sendCnt + " th times");
 
         if(sendCnt > 10) {
+            iridiumState = 0;
             clearInterval(intervalID);
+            console.log("failed to send iridium data!");
         }
     }, 5*60*1000);
 
@@ -447,4 +521,4 @@ EWCS.prototype.listen = function (listener) {
 setInterval(sendHeartbeat, 1000);
 setInterval(checkNetworkConnection, 5000);
 
-export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog, iridiumOn, iridiumOff};
+export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog, iridiumOn, iridiumOff, sendIridium};

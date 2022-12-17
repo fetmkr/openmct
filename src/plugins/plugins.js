@@ -83,6 +83,9 @@ define([
     './timelist/plugin',
     './faultManagement/FaultManagementPlugin',
     '../../example/exampleTags/plugin'
+    // './ewcs/ewcs-plugin',
+    // './ewcs/ewcs-historical-plugin',
+    // './ewcs/ewcs-realtime-plugin',
 ], function (
     _,
     UTCTimeSystem,
@@ -145,7 +148,10 @@ define([
     GaugePlugin,
     TimeList,
     FaultManagementPlugin,
-    ExampleTags
+    ExampleTags,
+    DictionaryPlugin,
+    HistoricalTelemetryPlugin,
+    RealtimeTelemetryPlugin
 ) {
     const plugins = {};
 
@@ -229,6 +235,9 @@ define([
     plugins.OperatorStatus = OperatorStatus.default;
     plugins.Gauge = GaugePlugin.default;
     plugins.Timelist = TimeList.default;
+    // plugins.DictionaryPlugin = DictionaryPlugin.default;
+    // plugins.HistoricalTelemetryPlugin = HistoricalTelemetryPlugin.default;
+    // plugins.RealtimeTelemetryPlugin = RealtimeTelemetryPlugin.default;
 
     return plugins;
 });

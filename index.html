@@ -27,7 +27,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <title></title>
         <script src="dist/openmct.js"></script>
-        <script src="lib/http.js"></script>
+        <script src="dist/lib/http.js"></script>
 
         <script src="ewcs-plugin.js"></script>
         <script src="ewcs-historical-plugin.js"></script>
@@ -208,6 +208,9 @@
         openmct.install(DictionaryPlugin());
         openmct.install(HistoricalTelemetryPlugin());
         openmct.install(RealtimeTelemetryPlugin());
+        // openmct.install(openmct.plugins.DictionaryPlugin());
+        // openmct.install(openmct.plugins.HistoricalTelemetryPlugin());
+        // openmct.install(openmct.plugins.RealtimeTelemetryPlugin());
         openmct.start();
     </script>
 </html>

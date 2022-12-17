@@ -1,5 +1,5 @@
 function getDictionary() {
-    return http.get('/ewcs-dictionary.json')
+    return http.get('./ewcs-dictionary.json')
         .then(function (result) {
             return result.data;
         });
@@ -51,7 +51,26 @@ var compositionProvider = {
     }
 };
 
-var DictionaryPlugin = function (openmct) {
+// var DictionaryPlugin = function (openmct) {
+//     return function install(openmct) {
+//         openmct.objects.addRoot({
+//             namespace: 'example.taxonomy',
+//             key: 'kopri.ewcs'
+//         });
+
+//         openmct.objects.addProvider('example.taxonomy', objectProvider);
+
+//         openmct.composition.addProvider(compositionProvider);
+
+//         openmct.types.addType('example.telemetry', {
+//             name: 'Example Telemetry Point',
+//             description: 'Example telemetry point from our happy tutorial.',
+//             cssClass: 'icon-telemetry'
+//         });
+//     };
+// };
+
+function DictionaryPlugin() {
     return function install(openmct) {
         openmct.objects.addRoot({
             namespace: 'example.taxonomy',
