@@ -11,6 +11,8 @@
 <body>
     <button  id = "iridiumBtn" onclick="iridiumOn()">Iridium On</button>
     <button onclick="iridiumOff()">Iridium Off</button>
+    <button onclick="iridiumSend()">Send Iridium Data</button>
+
 
     
 </body>
@@ -25,6 +27,14 @@ function iridiumOn() {
 
 function iridiumOff() {
     http.get('/api/set/iridium?on=0')
+    .then(function(resp){
+        console.log(resp.data);
+        return resp.data;
+    });
+}
+
+function iridiumSend() {
+    http.get('/api/set/iridium/send')
     .then(function(resp){
         console.log(resp.data);
         return resp.data;
