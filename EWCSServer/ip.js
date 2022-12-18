@@ -1,5 +1,6 @@
 import { readFile, writeFile } from "fs";
 import { publicIpv4 } from 'public-ip';
+import localIpAddress from 'local-ip-address';
 
 export const changeSystemIp = (ip, gateway) => {
   // Change IP and Gateway in /etc/dhcpcd.conf 
@@ -45,6 +46,10 @@ export const getPublicIp = async () => {
   console.log(ip);
   return ip;
 }
+
+export function getLocalIp() {
+  return localIpAddress();
+};
 
 //changeSystemIp('192.168.0.119', '192.168.0.1')
 //import dotenv from "dotenv";

@@ -12,6 +12,15 @@
     <button  id = "iridiumBtn" onclick="iridiumOn()">Iridium On</button>
     <button onclick="iridiumOff()">Iridium Off</button>
     <button onclick="iridiumSend()">Send Iridium Data</button>
+    <form name="form1" action="#"> 
+        IP Address: <input type='text' name='ipAddress'/>
+        Gateway: <input type='text' name='gateway'/>
+        <input type="submit" name="submit" value="Submit" 
+        onclick="setIPAddress(document.form1.ipAddress,document.form1.gateway)"/>
+    </form>
+
+
+
 
 
     
@@ -40,5 +49,30 @@ function iridiumSend() {
         return resp.data;
     });
 }
+
+function setIPAddress(ipAddress, gateway)
+{
+    var regEx = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    if(ipAddress.value.match(regEx) && gateway.value.match(regEx))
+    {
+        // console.log(ipAddress.value);
+        // console.log(gateway.value);
+        // set ip address
+        http.get(`/api/set/ip?ip=${ipAddress.value}&gateway=${gateway.value}`)
+        .then(function(resp){
+            console.log(resp.data);
+            return resp.data;
+        });
+
+        //return true;
+    }
+    else
+    {
+        // false
+        alert("Please enter a valid ip Address.");
+        return false;
+    }
+}    
+
 </script>
 </html>

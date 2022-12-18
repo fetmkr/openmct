@@ -2,7 +2,7 @@ import express from 'express';
 import { DB } from './db.js';
 import { iridiumOn,iridiumOff } from './ewcs.js';
 import { reboot } from './reboot.js';
-import { changeSystemIp, getPublicIp } from './ip.js';
+import { changeSystemIp, getPublicIp,getLocalIp } from './ip.js';
 
 export default function ApiServer(ewcsData, ewcsImageData) {
   var router = express.Router();
@@ -72,17 +72,23 @@ export default function ApiServer(ewcsData, ewcsImageData) {
         const ip = req.query.ip
         const gateway = req.query.gateway
         let result = false
+        console.log("set ip address to "+ip);
+        console.log("set gateway to "+gateway);
         if (ip && gateway) {
           result = changeSystemIp(`${ip}`, `${gateway}`)
         }
       return res.json({ result: `new raspberry pi is ${result}` })
      });
  
-     router.get('/get/ip', async function(req, res) {
+     router.get('/get/ip/public', async function(req, res) {
       const ip = await getPublicIp();
         return res.json({ip: `${ip}`});
      })
 
+     router.get('/get/ip/local',  function(req, res) {
+      const ip =  getLocalIp();
+        return res.json({ip: `${ip}`});
+     })
 
       return router;
     }

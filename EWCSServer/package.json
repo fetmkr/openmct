@@ -20,6 +20,7 @@
     "ffmpeg-extract-frames": "^2.0.2",
     "glob": "^8.0.3",
     "is-online": "^10.0.0",
+    "local-ip-address": "^1.0.0",
     "mcp-spi-adc": "^3.2.0",
     "nano": "^10.1.0",
     "onoff": "^6.0.3",
