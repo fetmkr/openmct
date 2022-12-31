@@ -21,12 +21,12 @@ app.get('/set/ip', function(req, res) {
 	return res.json({ result: `new raspberry pi is ${result}` })
 });
 
-POST
+// POST
 
-/set/cs125/heater?on=1
-/set/poe?on=1
-/set/iridium?on=1
-/set/mode?normal emergency
+// /set/cs125/heater?on=1
+// /set/poe?on=1
+// /set/iridium?on=1
+// /set/mode?normal emergency
 
 app.get('/get/ip', async function(req, res) {
     const ip = await getPublicIp();

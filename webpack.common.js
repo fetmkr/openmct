@@ -91,6 +91,13 @@ const config = {
                 {
                     from: 'src/plugins/imagery/layers',
                     to: 'imagery'
+                },
+                {
+                    from: './EWCSPlugin',
+                    to: 'EWCSPlugin',
+                    transform: function (content) {
+                        return content.toString().replace(/dist\//g, '');
+                    }
                 }
             ]
         }),

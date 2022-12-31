@@ -1,5 +1,5 @@
 function getDictionary() {
-    return http.get('./ewcs-dictionary.json')
+    return http.get('EWCSPlugin/ewcs-dictionary.json')
         .then(function (result) {
             return result.data;
         });

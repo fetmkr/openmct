@@ -4,6 +4,7 @@
 function RealtimeTelemetryPlugin() {
     return function (openmct) {
         var socket = new WebSocket(location.origin.replace(/^http/, 'ws') + '/realtime/');
+        console.log("location.origin "+location.origin);
         var listener = {};
 
         socket.onmessage = function (event) {

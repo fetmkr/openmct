@@ -75,7 +75,7 @@
     "start:coverage": "npx webpack serve --config ./webpack.coverage.js",
     "lint": "eslint example src e2e --ext .js,.vue openmct.js --max-warnings=0",
     "lint:fix": "eslint example src e2e --ext .js,.vue openmct.js --fix",
-    "build:prod": "webpack --config webpack.prod.js",
+    "build:prod": "webpack --config webpack.prod.js && cp -avr EWCSServer dist/",
     "build:dev": "webpack --config webpack.dev.js",
     "build:coverage": "webpack --config webpack.coverage.js",
     "build:watch": "webpack --config webpack.dev.js --watch",
