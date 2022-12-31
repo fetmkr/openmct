@@ -464,7 +464,7 @@ function EWCS(db) {
     setInterval(function () {
         this.updateState();
         this.generateTelemetry();
-        ewcsLog();
+        //ewcsLog();
     }.bind(this), 1000);
 
     setInterval(function () {

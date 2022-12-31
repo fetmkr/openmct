@@ -6,7 +6,7 @@
 export default {
     data() {
         return {
-            msg: 'Hello world!'
+            msg: 'Test Test Hello world!'
         };
     }
 };
@@ -14,6 +14,6 @@ export default {
 
 <style>
 .example {
-  color: red;
+  color: rgb(51, 0, 255);
 }
 </style>

@@ -4,8 +4,9 @@ import HelloWorld from './HelloWorld.vue';
 function SimpleVuePlugin() {
     return function install(openmct) {
         openmct.types.addType('hello-world', {
-            name: 'Hello World',
+            name: 'Test Vue',
             description: 'An introduction object',
+            cssClass: 'icon-packet',
             creatable: true
         });
         openmct.objectViews.addProvider({
