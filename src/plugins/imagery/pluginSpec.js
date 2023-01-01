@@ -95,7 +95,7 @@ describe("The Imagery View Layouts", () => {
             namespace: "",
             key: "imageryId"
         },
-        name: "Example Imagery",
+        name: "EWCS Imagery",
         type: "example.imagery",
         location: "parentId",
         modified: 0,

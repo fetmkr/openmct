@@ -5,6 +5,7 @@ let nano = Nano('http://admin:ewcs@127.0.0.1:5984')
 function DB() {
   let _db = null;
   
+  // create if first time else connect to the db
   const create = async (dbName) => {
     const dbList = await list();
     try {

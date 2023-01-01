@@ -20,7 +20,7 @@ const job = new CronJob.CronJob(
 );
 
 let ewcsData = {
-    stationName: "KOPRI",
+    stationName: "KOPRI", // TODO read name from DB
     timestamp: 0,
     cs125Current : 0,
     cs125Visibility: 0,
@@ -33,7 +33,7 @@ let ewcsData = {
     poeCurrent : 0,
     rpiTemp: 0,
     batteryVoltage : 0,
-    mode: "normal"
+    mode: "normal" // TODO read from DB
 };
 
 function setEWCSTime(){
@@ -400,6 +400,16 @@ function sendIridium(){
 
 }
 
+function setStationName(name) {
+    // TODO: error handling
+    ewcsData.stationName = name;
+    console.log("station name changed to: " +ewcsData.stationName);
+}
+
+function getStationName() {
+    return ewcsData.stationName;
+}
+
 function iridiumOn(){
     port0.write('I');
     console.log('iridium on')
@@ -515,10 +525,47 @@ EWCS.prototype.listen = function (listener) {
     }.bind(this);
 };
 
-//sendIridium();
+
+async function initEWCS()
+{
+    //read stored station name
+    const ewcsData = await new DB().create('ewcs-data');
+    const indexDef = {
+        index: { fields: ["timestamp"] },
+        ddoc:"ewcstime",
+        name: 'timestamp'
+      };
+    
+    const response = await ewcsData.createIndex(indexDef);
+    console.log(response);
+
+    const states = await new DB().find(ewcsData, {
+        "selector": {
+           "timestamp" :{"$gte": null}
+        },
+        "sort": [
+           {
+              "timestamp": "desc"
+           }
+        ],
+        "use_index": "ewcstime",
+        "limit": 1
+     });
+    console.log(states);
+      
+    // var response = states.docs.map(
+    // state => ({
+    //     ...state
+    // }));
+
+}
+
+initEWCS();
+// 초기화
+
 
 // 주기적으로 실행하기
 setInterval(sendHeartbeat, 1000);
 setInterval(checkNetworkConnection, 5000);
 
-export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog, iridiumOn, iridiumOff, sendIridium};
+export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog, setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, iridiumOn, iridiumOff, sendIridium, poeOn, poeOff};

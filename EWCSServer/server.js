@@ -22,6 +22,7 @@ const app = express();
 
 expressWs(app);
 
+
 const main = async () => {
     const ewcsData = await new DB().create('ewcs-data')
     const ewcsImageData = await new DB().create('ewcs-image')
@@ -56,7 +57,7 @@ const main = async () => {
     });
 }
 
-main()
+main();
 
 async function f1() {
     const now = Date.now()

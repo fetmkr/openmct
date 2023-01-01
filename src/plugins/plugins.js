@@ -190,7 +190,7 @@ define([
 
     plugins.CouchDB = CouchDBPlugin.default;
 
-    plugins.ImageryPlugin = ImageryPlugin;
+    plugins.ImageryPlugin = ImageryPlugin.default;
     plugins.Plot = PlotPlugin.default;
     plugins.BarChart = BarChartPlugin.default;
     plugins.ScatterPlot = ScatterPlotPlugin.default;
