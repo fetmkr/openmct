@@ -13,13 +13,15 @@ export const changeSystemIp = (ip, gateway) => {
     replaced = replaced.replace(/static routers=.*/, `static routers=${gateway}`);
     replaced = replaced.replace(/static domain_name_servers=.*/, `static domain_name_servers=${gateway} 8.8.8.8`);
 
-    writeFile('./dhcpcd.conf', replaced, 'utf-8', function (err) {
+    writeFile('/etc/dhcpcd.conf', replaced, 'utf-8', function (err) {
       if (err) {
         console.log(err);
         return false
       }
     });
   });
+  console.log("set ip address to "+ip);
+  console.log("set gateway to "+gateway);
   return true
 };
 

@@ -7,6 +7,7 @@ import isOnline from 'is-online';
 import crc16ccitt from 'crc/crc16ccitt';
 import fs from  'fs';
 import CronJob from 'cron';
+import { readFile, writeFile } from "fs";
 
 const job = new CronJob.CronJob(
 	'0 0 * * * ',
@@ -403,6 +404,23 @@ function sendIridium(){
 function setStationName(name) {
     // TODO: error handling
     ewcsData.stationName = name;
+    fs.readFile('/home/pi/EWCSData/config.json', 'utf8', (error, data) => {
+        if(error){
+           console.log(error);
+           return;
+        }
+       // console.log(JSON.parse(data));
+        const parsedData = JSON.parse(data);
+        parsedData.stationName = ewcsData.stationName;
+        fs.writeFileSync('/home/pi/EWCSData/config.json', JSON.stringify(parsedData),'utf8',function (err) {
+            if (err) {
+              console.log(err);
+              return false
+            }
+          });
+        console.log("changed station name to: "+ parsedData.stationName);   
+   })
+
     console.log("station name changed to: " +ewcsData.stationName);
 }
 
@@ -529,34 +547,42 @@ EWCS.prototype.listen = function (listener) {
 async function initEWCS()
 {
     //read stored station name
-    const ewcsData = await new DB().create('ewcs-data');
-    const indexDef = {
-        index: { fields: ["timestamp"] },
-        ddoc:"ewcstime",
-        name: 'timestamp'
-      };
+    // const ewcsData = await new DB().create('ewcs-data');
+    // const indexDef = {
+    //     index: { fields: ["timestamp"] },
+    //     ddoc:"ewcstime",
+    //     name: 'timestamp'
+    //   };
     
-    const response = await ewcsData.createIndex(indexDef);
-    console.log(response);
+    // const response = await ewcsData.createIndex(indexDef);
+    // console.log(response);
 
-    const states = await new DB().find(ewcsData, {
-        "selector": {
-           "timestamp" :{"$gte": null}
-        },
-        "sort": [
-           {
-              "timestamp": "desc"
-           }
-        ],
-        "use_index": "ewcstime",
-        "limit": 1
-     });
-    console.log(states);
-      
-    // var response = states.docs.map(
-    // state => ({
-    //     ...state
-    // }));
+    // const states = await new DB().find(ewcsData, {
+    //     "selector": {
+    //        "timestamp" :{"$gte": null}
+    //     },
+    //     "sort": [
+    //        {
+    //           "timestamp": "desc"
+    //        }
+    //     ],
+    //     "use_index": "ewcstime",
+    //     "limit": 1
+    //  });
+    // console.log(states);
+    
+    // 먼가 db를 읽어 해보려하는데 잘 안되서 그냥 파일로 한다.
+    
+    fs.readFile('/home/pi/EWCSData/config.json', 'utf8', (error, data) => {
+        if(error){
+           console.log(error);
+           return;
+        }
+       // console.log(JSON.parse(data));
+        const parsedData = JSON.parse(data);
+        ewcsData.stationName =  parsedData.stationName;
+        console.log("initialize station name to: "+ parsedData.stationName);   
+   })
 
 }
 

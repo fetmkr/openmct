@@ -2,7 +2,7 @@ import express from 'express';
 import { DB } from './db.js';
 import { iridiumOn,iridiumOff , setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff } from './ewcs.js';
 import { reboot } from './reboot.js';
-import { changeSystemIp, getPublicIp,getLocalIp} from './ip.js';
+import { changeSystemIp, changeCouchDbIp, getPublicIp,getLocalIp} from './ip.js';
 
 export default function ApiServer(ewcsData, ewcsImageData) {
   var router = express.Router();
@@ -108,13 +108,16 @@ export default function ApiServer(ewcsData, ewcsImageData) {
       router.get('/set/ip', function(req, res) {
         const ip = req.query.ip
         const gateway = req.query.gateway
-        let result = false
-        console.log("set ip address to "+ip);
-        console.log("set gateway to "+gateway);
+        let result1 = false;
+        let result2 = false;
+        console.log("asked to set ip address to "+ip);
+        console.log("asked to set gateway to "+gateway);
         if (ip && gateway) {
-          result = changeSystemIp(`${ip}`, `${gateway}`)
+          result1 = changeSystemIp(`${ip}`, `${gateway}`);
+          result2 = changeCouchDbIp(`${ip}`);
+          if (result1 && result2) reboot();
         }
-      return res.json({ result: `new raspberry pi is ${result}` })
+      return res.json({ result: `new raspberry pi is ${result1}, ${result2}` })
      });
  
      router.get('/get/ip/public', async function(req, res) {
