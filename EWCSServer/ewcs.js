@@ -84,6 +84,7 @@ parser2.on('data', (line) => {
         ewcsData.cs125Temp = parseFloat(data[24]); 
         ewcsData.cs125Humidity = parseFloat(data[25]); 
     }
+    else(console.log(line))
 });
 
 
@@ -92,6 +93,7 @@ function CS125HoodHeaterOn()
     let hoodOnBuffer = Buffer.concat([Buffer.from([0x02]),Buffer.from('SET:0:0 0 0 10000 0 0 1000 2 3442 M 1 0 5 0 1 1 0 0 1 0 7.0 80')]);
     hoodOnBuffer = Buffer.concat([hoodOnBuffer,Buffer.from(':'),Buffer.from(crc16ccitt(hoodOnBuffer).toString(16)),Buffer.from(':'),Buffer.from([0x03,0x0D,0x0A])]); 
     port2.write(hoodOnBuffer);
+    console.log("cs125 hood heater on");
 }
 
 function CS125HoodHeaterOff()
@@ -99,6 +101,8 @@ function CS125HoodHeaterOff()
     let hoodOffBuffer = Buffer.concat([Buffer.from([0x02]),Buffer.from('SET:0:0 0 0 10000 0 0 1000 2 3442 M 1 0 5 0 1 1 0 1 1 0 7.0 80')]);
     hoodOffBuffer = Buffer.concat([hoodOffBuffer,Buffer.from(':'),Buffer.from(crc16ccitt(hoodOffBuffer).toString(16)),Buffer.from(':'),Buffer.from([0x03,0x0D,0x0A])]);
     port2.write(hoodOffBuffer);
+    console.log("cs125 hood heater off");
+
 }
 
 function CS125GetStatus()
@@ -107,6 +111,7 @@ function CS125GetStatus()
     getBuffer = Buffer.concat([getBuffer,Buffer.from('GET:0:0')]);
     getBuffer = Buffer.concat([getBuffer,Buffer.from(':'),Buffer.from(crc16ccitt(getBuffer).toString(16)),Buffer.from(':'),Buffer.from([0x03,0x0D,0x0A])]);
     port2.write(getBuffer);
+    return true;
 }
 
 // iridium port
@@ -144,6 +149,7 @@ function sendHeartbeat() {
 }
 
 function checkNetworkConnection() {
+    try {
     isOnline().then(online => {
         if(online){
             LED.writeSync(1);
@@ -153,6 +159,10 @@ function checkNetworkConnection() {
             console.log("Not connected to internet");
         }
        });
+    } catch(e) {
+        console.log(e)
+    }
+
 }
 
 function readADC() {
@@ -428,6 +438,31 @@ function getStationName() {
     return ewcsData.stationName;
 }
 
+function setMode(mode){
+    ewcsData.mode = mode
+    fs.readFile('/home/pi/EWCSData/config.json', 'utf8', (error, data) => {
+        if(error){
+           console.log(error);
+           return;
+        }
+       // console.log(JSON.parse(data));
+        const parsedData = JSON.parse(data);
+        parsedData.mode = ewcsData.mode;
+        fs.writeFileSync('/home/pi/EWCSData/config.json', JSON.stringify(parsedData),'utf8',function (err) {
+            if (err) {
+              console.log(err);
+              return false
+            }
+          });
+        console.log("changed station mode to: "+ parsedData.mode);   
+   })
+
+}
+
+function getMode(){
+    return ewcsData.mode
+}
+
 function iridiumOn(){
     port0.write('I');
     console.log('iridium on')
@@ -462,6 +497,16 @@ function poeOff(){
     port0.write('p');
     console.log('poe off')
 
+}
+
+
+async function poeReset(){
+    poeOff();
+    console.log("poe off")
+    await new Promise(resolve => setTimeout(resolve, 5*1000))
+    poeOn();
+    console.log("poe on")
+    return true;
 }
 
 
@@ -581,7 +626,11 @@ async function initEWCS()
        // console.log(JSON.parse(data));
         const parsedData = JSON.parse(data);
         ewcsData.stationName =  parsedData.stationName;
-        console.log("initialize station name to: "+ parsedData.stationName);   
+        console.log("initialize station name to: "+ parsedData.stationName);  
+        
+        poeOn();
+        cs125On();
+        iridiumOn();
    })
 
 }
@@ -594,4 +643,4 @@ initEWCS();
 setInterval(sendHeartbeat, 1000);
 setInterval(checkNetworkConnection, 5000);
 
-export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog, setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, iridiumOn, iridiumOff, sendIridium, poeOn, poeOff};
+export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog, setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus, iridiumOn, iridiumOff, sendIridium, poeReset,setMode, getMode};

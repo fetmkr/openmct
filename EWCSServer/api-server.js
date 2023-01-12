@@ -1,6 +1,6 @@
 import express from 'express';
 import { DB } from './db.js';
-import { iridiumOn,iridiumOff , setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff } from './ewcs.js';
+import { iridiumOn,iridiumOff , setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus,poeReset,setMode,getMode } from './ewcs.js';
 import { reboot } from './reboot.js';
 import { changeSystemIp, changeCouchDbIp, getPublicIp,getLocalIp} from './ip.js';
 
@@ -82,6 +82,17 @@ export default function ApiServer(ewcsData, ewcsImageData) {
           res.status(200).json(response).end();
       });
 
+      router.get('/get/cs125/heater/status', async function(req,res){
+        const status = CS125GetStatus();
+        return res.json({cs125Status: status});
+      });
+
+      router.get('/set/poe/reset', async function (req, res) {
+        const result = poeReset();
+        return res.json({poereset: result});
+      });
+
+
 
       router.get('/set/iridium', async function (req, res) {
         const onData = req.query.on;
@@ -125,23 +136,42 @@ export default function ApiServer(ewcsData, ewcsImageData) {
         return res.json({ip: `${ip}`});
      });
 
-     router.get('/get/ip/local',  function(req, res) {
+    router.get('/get/ip/local',  function(req, res) {
       const ip =  getLocalIp();
         return res.json({ip: `${ip}`});
-     });
-
-     router.get('/set/station', async function (req, res) {
-      const name = req.query.name;
-      setStationName(name);
-      const response = { "result": name }
-     
-        res.status(200).json(response).end();
     });
 
-    router.get('/get/station/name', async function (req, res) {
-      const stationName = getStationName();
-      return res.json({station: `${stationName}`});
-    });
+      router.get('/set/station', async function (req, res) {
+        const name = req.query.name;
+        setStationName(name);
+        const response = { "result": name }
+      
+          res.status(200).json(response).end();
+      });
+
+      router.get('/get/station/name', async function (req, res) {
+        const stationName = getStationName();
+        return res.json({station: `${stationName}`});
+      });
+
+      router.get('/set/station/mode', async function (req, res) {
+        const val = req.query.val;
+        let mode;
+        if(val == 0) {mode = "normal"}
+        else if (val == 1) {mode = "emergency"}
+
+        setMode(mode);
+        const response = { "result": mode }
+      
+          res.status(200).json(response).end();
+      });
+
+      router.get('/get/station/mode', async function (req, res) {
+        const mode = getMode();
+        return res.json({mode: `${mode}`});
+      });
+
+
 
       return router;
     }
