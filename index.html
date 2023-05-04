@@ -82,10 +82,10 @@
         const ONE_DAY = ONE_HOUR * 24;
 
         // normal setup
-        //openmct.install(openmct.plugins.CouchDB("http://192.168.0.238:5984/openmct"));
+        openmct.install(openmct.plugins.CouchDB("http://192.168.0.238:5984/openmct"));
 
         // test setup
-        openmct.install(openmct.plugins.CouchDB(" https://ewcs.jp.ngrok.io/openmct"));
+        //openmct.install(openmct.plugins.CouchDB(" https://ewcs.jp.ngrok.io/openmct"));
 
         openmct.install(openmct.plugins.example.Generator());
         openmct.install(openmct.plugins.example.EventGeneratorPlugin());
