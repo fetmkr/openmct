@@ -32,10 +32,10 @@ export default function ApiServer(ewcsData, ewcsImageData) {
       
       //new DB().info(spacecraft.db)
       const states = await new DB().find(ewcsImageData, { 
-        "$and": [
-          {"timestamp": { "$gte": start }},
-          {"timestamp": { "$lte": end }},
-        ]
+       "$and": [
+          {"timestamp":{ "$gte": start }},
+	  {"timestamp":{ "$lte": end }},
+	]
       });
       
       var response = states.docs.map(

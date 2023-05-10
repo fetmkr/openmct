@@ -66,7 +66,7 @@ async function f1() {
     new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
     try {
         await extractFrame({
-                input: 'rtsp://admin:kopriControl2022@192.168.0.110:554/Streaming/Channels/101',
+                input: 'rtsp://admin:kopriControl2022@192.168.0.12:554/Streaming/Channels/101',
                 quality: 31,
                 output: path
             });
