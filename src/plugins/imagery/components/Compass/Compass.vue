@@ -70,7 +70,8 @@ export default {
     },
     computed: {
         hasCameraFieldOfView() {
-            return this.cameraPan !== undefined && this.cameraAngleOfView > 0;
+            return false;
+            //return this.cameraPan !== undefined && this.cameraAngleOfView > 0;
         },
         // horizontal rotation from north in degrees
         heading() {

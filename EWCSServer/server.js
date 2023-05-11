@@ -31,7 +31,7 @@ const main = async () => {
     var realtimeServer = new RealtimeServer(ewcs);
     var historyServer = new HistoryServer(ewcs);
     var apiServer = new ApiServer(ewcsData, ewcsImageData);
-    var imageServer = new ImageServer();
+    var imageServer = new ImageServer(ewcsImageData);
     var staticServer = new StaticServer();
     
     app.use('/realtime', realtimeServer);
@@ -75,7 +75,7 @@ async function f1() {
             });
         const ewcsImageData = await new DB().create('ewcs-image')
         new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
-        console.log("image saved");
+        console.log("ewcs image saved");
     }  catch (e) {
         console.log(e);
     }

@@ -24,6 +24,7 @@ export default function RealtimeServer(spacecraft) {
 
         // Listen for requests
         ws.on('message', function (message) {
+            console.log(message)
             var parts = message.split(' '),
                 handler = handlers[parts[0]];
             if (handler) {

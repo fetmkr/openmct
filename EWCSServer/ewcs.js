@@ -21,7 +21,7 @@ const job = new CronJob.CronJob(
 );
 
 let ewcsData = {
-    stationName: "KOPRI", // TODO read name from DB
+    stationName: "KOPRI", 
     timestamp: 0,
     cs125Current : 0,
     cs125Visibility: 0,
@@ -34,7 +34,7 @@ let ewcsData = {
     poeCurrent : 0,
     rpiTemp: 0,
     batteryVoltage : 0,
-    mode: "normal" // TODO read from DB
+    mode: "normal" 
 };
 
 let ewcsStatus = {
@@ -600,7 +600,7 @@ function EWCS(db) {
         //ewcsLog();
     }.bind(this), 1000);
 
-    // save ewcs data 
+    // save ewcs data to database every 60 seconds
     setInterval(function () {
         new DB().insertAsync(db, { ... ewcsData });
     }.bind(this), 60*1000);
@@ -632,6 +632,7 @@ EWCS.prototype.generateTelemetry = function () {
         this.notify(state);
         this.history[id].push(state);
     }, this);
+    
 };
 
 EWCS.prototype.notify = function (point) {
