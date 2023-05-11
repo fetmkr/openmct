@@ -1,6 +1,6 @@
 import express from 'express';
 import { DB } from './db.js';
-import { iridiumOn,iridiumOff , setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus,poeReset,setMode,getMode } from './ewcs.js';
+import { iridiumOn,iridiumOff , setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus,poeReset,setMode,getMode,getCs125OnStatus,getCs125HoodHeaterStatus, getPoeOnStatus,getIridiumOnStatus,setCameraIpAddress, getCameraIpAddress, ewcsLog } from './ewcs.js';
 import { reboot } from './reboot.js';
 import { changeSystemIp, changeCouchDbIp, getPublicIp,getLocalIp} from './ip.js';
 
@@ -34,7 +34,7 @@ export default function ApiServer(ewcsData, ewcsImageData) {
       const states = await new DB().find(ewcsImageData, { 
        "$and": [
           {"timestamp":{ "$gte": start }},
-	  {"timestamp":{ "$lte": end }},
+	        {"timestamp":{ "$lte": end }},
 	]
       });
       
@@ -83,14 +83,16 @@ export default function ApiServer(ewcsData, ewcsImageData) {
       });
 
       router.get('/get/cs125/heater/status', async function(req,res){
-        const status = CS125GetStatus();
-        return res.json({cs125Status: status});
+        const status = getCs125HoodHeaterStatus();
+        return res.json({cs125HoodHeaterStatus: status});
       });
 
       router.get('/set/poe/reset', async function (req, res) {
         const result = poeReset();
         return res.json({poereset: result});
       });
+
+      
 
 
 
@@ -109,6 +111,28 @@ export default function ApiServer(ewcsData, ewcsImageData) {
         const response = { "result": onData }
        
           res.status(200).json(response).end();
+      });
+
+      router.get('/get/cs125/status', async function(req,res){
+        const status = getCs125OnStatus();
+        return res.json({cs125OnStatus: status});
+      });
+
+      router.get('/get/poe/status', async function(req,res){
+        const status = getPoeOnStatus();
+        return res.json({poeOnStatus: status});
+      });
+
+      router.get('/get/iridium/status', async function(req,res){
+        const status = getIridiumOnStatus();
+        return res.json({iridiumOnStatus: status});
+      });
+
+      
+
+      router.get('/get/log', async function(req,res){
+        const log = ewcsLog();
+        return res.json({ewcslog: log});
       });
       
       router.get('/reboot', function(req, res) {
@@ -130,6 +154,22 @@ export default function ApiServer(ewcsData, ewcsImageData) {
         }
       return res.json({ result: `new raspberry pi is ${result1}, ${result2}` })
      });
+
+     router.get('/set/camera/ip', function(req, res) {
+        const ip = req.query.ip
+        let result = false;
+        console.log("asked to set camera ip address to "+ip);
+        if (ip) {
+          result = setCameraIpAddress(`${ip}`);
+        }
+        return res.json({ result: `new camera ip is ${result}`})
+      });
+
+      router.get('/get/camera/ip',  function(req, res) {
+        const ip =  getCameraIpAddress();
+          return res.json({cameraip: `${ip}`});
+      });
+
  
      router.get('/get/ip/public', async function(req, res) {
       const ip = await getPublicIp();

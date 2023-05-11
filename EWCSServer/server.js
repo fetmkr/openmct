@@ -4,7 +4,7 @@
 
 // import EWCS from './ewcs.js';
 
-import {EWCS, updateRN171} from './ewcs.js'
+import {EWCS, updateRN171,getCameraIpAddress} from './ewcs.js'
 
 import RealtimeServer from './realtime-server.js';
 import HistoryServer from './history-server.js';
@@ -62,14 +62,20 @@ main();
 async function f1() {
     const now = Date.now()
     let path = `./ewcsimage/${now}.jpg`;
-    const ewcsImageData = await new DB().create('ewcs-image')
-    new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
+    let camerapath = 'rtsp://admin:kopriControl2022@' + getCameraIpAddress() +':554/Streaming/Channels/101';
+    console.log("camera path"+camerapath);
+    // const ewcsImageData = await new DB().create('ewcs-image')
+    // new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
     try {
         await extractFrame({
-                input: 'rtsp://admin:kopriControl2022@192.168.0.12:554/Streaming/Channels/101',
+                //input: 'rtsp://admin:kopriControl2022@192.168.0.12:554/Streaming/Channels/101',
+                input: camerapath,
                 quality: 31,
                 output: path
             });
+        const ewcsImageData = await new DB().create('ewcs-image')
+        new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
+        console.log("image saved");
     }  catch (e) {
         console.log(e);
     }

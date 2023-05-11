@@ -20,6 +20,23 @@ export const changeSystemIp = (ip, gateway) => {
       }
     });
   });
+  fs.readFile('/home/pi/EWCSData/config.json', 'utf8', (error, data) => {
+    if(error){
+       console.log(error);
+       return;
+    }
+   // console.log(JSON.parse(data));
+    const parsedData = JSON.parse(data);
+    parsedData.ipAddress = ip;
+    parsedData.gateway = gateway;
+    fs.writeFileSync('/home/pi/EWCSData/config.json', JSON.stringify(parsedData),'utf8',function (err) {
+        if (err) {
+          console.log(err);
+          return false
+        }
+      });
+    console.log("changed ip and gateway address saved");   
+  })
   console.log("set ip address to "+ip);
   console.log("set gateway to "+gateway);
   return true

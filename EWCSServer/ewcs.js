@@ -37,6 +37,16 @@ let ewcsData = {
     mode: "normal" // TODO read from DB
 };
 
+let ewcsStatus = {
+    cs125OnStatus: 0,
+    cs125HoodHeaterStatus: 0,
+    poeOnStatus: 0,
+    iridiumOnStatus: 0,
+    ipAddress:"",
+    gateway:"",
+    cameraIpAddress:""
+};
+
 function setEWCSTime(){
     ewcsData.timestamp = Date.now();
 }
@@ -83,6 +93,8 @@ parser2.on('data', (line) => {
         ewcsData.cs125SYNOP = parseInt(data[23]);
         ewcsData.cs125Temp = parseFloat(data[24]); 
         ewcsData.cs125Humidity = parseFloat(data[25]); 
+        //console.log("cs125 temp: ", ewcsData.cs125Temp);
+        //console.log("cs125 humidity: ", ewcsData.cs125Humidity);
     }
     else(console.log(line))
 });
@@ -111,6 +123,7 @@ function CS125GetStatus()
     getBuffer = Buffer.concat([getBuffer,Buffer.from('GET:0:0')]);
     getBuffer = Buffer.concat([getBuffer,Buffer.from(':'),Buffer.from(crc16ccitt(getBuffer).toString(16)),Buffer.from(':'),Buffer.from([0x03,0x0D,0x0A])]);
     port2.write(getBuffer);
+    console.log("CS125 status: ");
     return true;
 }
 
@@ -204,7 +217,9 @@ function readTemp() {
 }
 
 function ewcsLog() {
-    console.log(ewcsData);
+    
+    //console.log(ewcsData);
+    return ewcsData;
 }
 
 let iridiumResponse;
@@ -465,36 +480,42 @@ function getMode(){
 
 function iridiumOn(){
     port0.write('I');
+    ewcsStatus.iridiumOnStatus = 1;
     console.log('iridium on')
 
 }
 
 function iridiumOff(){
     port0.write('i');
+    ewcsStatus.iridiumOnStatus = 0;
     console.log('iridium off')
 
 }
 
 function cs125On(){
     port0.write('C');
+    ewcsStatus.cs125OnStatus = 1;
     console.log('cs125 on')
 
 }
 
 function cs125Off(){
     port0.write('c');
+    ewcsStatus.cs125OnStatus = 0;
     console.log('cs125 off')
 
 }
 
 function poeOn(){
     port0.write('P');
+    ewcsStatus.poeOnStatus = 1;
     console.log('poe on')
 
 }
 
 function poeOff(){
     port0.write('p');
+    ewcsStatus.poeOnStatus = 0;
     console.log('poe off')
 
 }
@@ -509,7 +530,46 @@ async function poeReset(){
     return true;
 }
 
+function getCs125OnStatus() {
+    return ewcsStatus.cs125OnStatus;
+}
 
+function getCs125HoodHeaterStatus() {
+    return ewcsStatus.cs125HoodHeaterStatus;
+}
+
+function getPoeOnStatus() {
+    return ewcsStatus.poeOnStatus;
+}
+
+function getIridiumOnStatus() {
+    return ewcsStatus.iridiumOnStatus;
+}
+
+function setCameraIpAddress(ip) {
+    ewcsStatus.cameraIpAddress = ip;
+    fs.readFile('/home/pi/EWCSData/config.json', 'utf8', (error, data) => {
+        if(error){
+           console.log(error);
+           return;
+        }
+       // console.log(JSON.parse(data));
+        const parsedData = JSON.parse(data);
+        parsedData.cameraIpAddress = ewcsStatus.cameraIpAddress;
+        fs.writeFileSync('/home/pi/EWCSData/config.json', JSON.stringify(parsedData),'utf8',function (err) {
+            if (err) {
+              console.log(err);
+              return false
+            }
+          });
+        console.log("camear ip address changed to: "+ parsedData.cameraIpAddress);   
+   })
+   return true;
+}
+
+function getCameraIpAddress() {
+    return ewcsStatus.cameraIpAddress;
+}
 
 function EWCS(db) {
     this.state = {
@@ -628,6 +688,14 @@ async function initEWCS()
         ewcsData.stationName =  parsedData.stationName;
         console.log("initialize station name to: "+ parsedData.stationName);  
         
+        ewcsStatus.ipAddress = parsedData.ipAddress;
+        ewcsStatus.gateway = parsedData.gateway;
+        ewcsStatus.cameraIpAddress = parsedData.cameraIpAddress;
+
+        console.log("current rpi ip address: "+ ewcsStatus.ipAddress);
+        console.log("current rpi ip gateway: "+ ewcsStatus.gateway);
+        console.log("current camera ip address: "+ ewcsStatus.cameraIpAddress);
+
         poeOn();
         cs125On();
         iridiumOn();
@@ -643,4 +711,7 @@ initEWCS();
 setInterval(sendHeartbeat, 1000);
 setInterval(checkNetworkConnection, 5000);
 
-export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog, setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus, iridiumOn, iridiumOff, sendIridium, poeReset,setMode, getMode};
+export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog, setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus, iridiumOn, iridiumOff, sendIridium, poeReset,setMode, getMode, getCs125OnStatus,getCs125HoodHeaterStatus, getPoeOnStatus,getIridiumOnStatus, setCameraIpAddress, getCameraIpAddress};
+
+ 
+
