@@ -600,6 +600,7 @@ function EWCS(db) {
         //ewcsLog();
     }.bind(this), 1000);
 
+    // save ewcs data 
     setInterval(function () {
         new DB().insertAsync(db, { ... ewcsData });
     }.bind(this), 60*1000);

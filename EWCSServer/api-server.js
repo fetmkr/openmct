@@ -10,13 +10,20 @@ export default function ApiServer(ewcsData, ewcsImageData) {
   router.get('/data/history', async function (req, res) {
     const start = +req.query.start;
     const end = +req.query.end;
-    
-    const states = await new DB().find(ewcsData, { 
-      "$and": [
-        {"timestamp": { "$gte": start }},
-        {"timestamp": { "$lte": end }},
-      ]
-    });
+    const query = {  
+      selector:{
+        timestamp: {
+          "$gte": start,
+          "$lte": end
+        }
+      },
+      limit: 100
+    }
+
+
+    //console.log("query ",query);
+    const states = await new DB().find(ewcsData, query);
+    //console.log("result", states);
     
     var response = states.docs.map(
       state => ({
@@ -30,13 +37,16 @@ export default function ApiServer(ewcsData, ewcsImageData) {
       const start = +req.query.start;
       const end = +req.query.end;
       
-      //new DB().info(spacecraft.db)
-      const states = await new DB().find(ewcsImageData, { 
-       "$and": [
-          {"timestamp":{ "$gte": start }},
-	        {"timestamp":{ "$lte": end }},
-	]
-      });
+      const query = {  
+        selector:{
+          timestamp: {
+            "$gte": start,
+            "$lte": end
+          }
+        },
+        limit: 100
+      }
+      const states = await new DB().find(ewcsImageData, query);
       
       var response = states.docs.map(
         state => ({
@@ -130,7 +140,7 @@ export default function ApiServer(ewcsData, ewcsImageData) {
 
       
 
-      router.get('/get/log', async function(req,res){
+      router.get('/get/ewcsdata', async function(req,res){
         const log = ewcsLog();
         return res.json({ewcslog: log});
       });

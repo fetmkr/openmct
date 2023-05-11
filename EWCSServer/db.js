@@ -54,6 +54,7 @@ function DB() {
         return;
       }
       //console.log(b);
+      console.log("ewcs data saved")
     })
   }
   
@@ -76,10 +77,16 @@ function DB() {
     return doclist
   }
   
-  const find_docs = async (db, _selector) => {
-    const docs = await db.find({
-      selector: _selector,
-    });
+  // const find_docs = async (db, _selector) => {
+  //   const docs = await db.find({
+  //     selector: _selector,limit: 0,
+  //   });
+  //   //console.log(docs)
+  //   return docs
+  // }
+
+  const find_docs = async (db, query) => {
+    const docs = await db.find(query);
     //console.log(docs)
     return docs
   }
