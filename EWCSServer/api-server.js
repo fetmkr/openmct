@@ -1,6 +1,6 @@
 import express from 'express';
 import { DB } from './db.js';
-import { iridiumOn,iridiumOff , setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus,poeReset,setMode,getMode,getCs125OnStatus,getCs125HoodHeaterStatus, getPoeOnStatus,getIridiumOnStatus,setCameraIpAddress, getCameraIpAddress, ewcsLog } from './ewcs.js';
+import { iridiumOn,iridiumOff , setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus,poeReset,setMode,getMode,getCs125OnStatus,getCs125HoodHeaterStatus, getPoeOnStatus,getIridiumOnStatus,setCameraIpAddress, getCameraIpAddress, ewcsDataNow,ewcsStatusNow } from './ewcs.js';
 import { reboot } from './reboot.js';
 import { changeSystemIp, changeCouchDbIp, getPublicIp,getLocalIp} from './ip.js';
 
@@ -17,7 +17,8 @@ export default function ApiServer(ewcsData, ewcsImageData) {
           "$lte": end
         }
       },
-      limit: 100
+      limit: 100,
+      sort: [{timestamp: "desc"}]
     }
 
 
@@ -44,7 +45,8 @@ export default function ApiServer(ewcsData, ewcsImageData) {
             "$lte": end
           }
         },
-        limit: 100
+        limit: 100,
+        sort: [{timestamp: "desc"}]
       }
       const states = await new DB().find(ewcsImageData, query);
       
@@ -140,9 +142,14 @@ export default function ApiServer(ewcsData, ewcsImageData) {
 
       
 
-      router.get('/get/ewcsdata', async function(req,res){
-        const log = ewcsLog();
-        return res.json({ewcslog: log});
+      router.get('/get/now/ewcsdata', async function(req,res){
+        const data = ewcsDataNow();
+        return res.json({ewcsdata: data});
+      });
+
+      router.get('/get/now/ewcsstatus', async function(req,res){
+        const status = ewcsStatusNow();
+        return res.json({ewcsstatus: status});
       });
       
       router.get('/reboot', function(req, res) {

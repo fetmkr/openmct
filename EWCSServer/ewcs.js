@@ -105,6 +105,7 @@ function CS125HoodHeaterOn()
     let hoodOnBuffer = Buffer.concat([Buffer.from([0x02]),Buffer.from('SET:0:0 0 0 10000 0 0 1000 2 3442 M 1 0 5 0 1 1 0 0 1 0 7.0 80')]);
     hoodOnBuffer = Buffer.concat([hoodOnBuffer,Buffer.from(':'),Buffer.from(crc16ccitt(hoodOnBuffer).toString(16)),Buffer.from(':'),Buffer.from([0x03,0x0D,0x0A])]); 
     port2.write(hoodOnBuffer);
+    ewcsStatus.cs125HoodHeaterStatus = 1;
     console.log("cs125 hood heater on");
 }
 
@@ -113,6 +114,7 @@ function CS125HoodHeaterOff()
     let hoodOffBuffer = Buffer.concat([Buffer.from([0x02]),Buffer.from('SET:0:0 0 0 10000 0 0 1000 2 3442 M 1 0 5 0 1 1 0 1 1 0 7.0 80')]);
     hoodOffBuffer = Buffer.concat([hoodOffBuffer,Buffer.from(':'),Buffer.from(crc16ccitt(hoodOffBuffer).toString(16)),Buffer.from(':'),Buffer.from([0x03,0x0D,0x0A])]);
     port2.write(hoodOffBuffer);
+    ewcsStatus.cs125HoodHeaterStatus = 0;
     console.log("cs125 hood heater off");
 
 }
@@ -123,7 +125,7 @@ function CS125GetStatus()
     getBuffer = Buffer.concat([getBuffer,Buffer.from('GET:0:0')]);
     getBuffer = Buffer.concat([getBuffer,Buffer.from(':'),Buffer.from(crc16ccitt(getBuffer).toString(16)),Buffer.from(':'),Buffer.from([0x03,0x0D,0x0A])]);
     port2.write(getBuffer);
-    console.log("CS125 status: ");
+    console.log("CS125 status check serial send: ");
     return true;
 }
 
@@ -216,10 +218,14 @@ function readTemp() {
     return temp_c;
 }
 
-function ewcsLog() {
+function ewcsDataNow() {
     
     //console.log(ewcsData);
     return ewcsData;
+}
+
+function ewcsStatusNow() {
+    return ewcsStatus;
 }
 
 let iridiumResponse;
@@ -701,6 +707,7 @@ async function initEWCS()
         poeOn();
         cs125On();
         iridiumOn();
+        CS125HoodHeaterOff();
    })
 
 }
@@ -713,7 +720,7 @@ initEWCS();
 setInterval(sendHeartbeat, 1000);
 setInterval(checkNetworkConnection, 5000);
 
-export {EWCS, readADC, updateRN171, setEWCSTime, ewcsLog, setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus, iridiumOn, iridiumOff, sendIridium, poeReset,setMode, getMode, getCs125OnStatus,getCs125HoodHeaterStatus, getPoeOnStatus,getIridiumOnStatus, setCameraIpAddress, getCameraIpAddress};
+export {EWCS, readADC, updateRN171, setEWCSTime, ewcsDataNow, ewcsStatusNow, setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus, iridiumOn, iridiumOff, sendIridium, poeReset,setMode, getMode, getCs125OnStatus,getCs125HoodHeaterStatus, getPoeOnStatus,getIridiumOnStatus, setCameraIpAddress, getCameraIpAddress};
 
  
 
