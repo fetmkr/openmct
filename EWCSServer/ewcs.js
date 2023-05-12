@@ -554,6 +554,28 @@ function getIridiumOnStatus() {
     return ewcsStatus.iridiumOnStatus;
 }
 
+function saveConfig(key, value)
+{
+    fs.readFile('/home/pi/EWCSData/config.json', 'utf8', (error, data) => {
+        if(error){
+           console.log(error);
+           return;
+        }
+       // console.log(JSON.parse(data));
+        const parsedData = JSON.parse(data);
+        parsedData[key] = value;
+        fs.writeFileSync('/home/pi/EWCSData/config.json', JSON.stringify(parsedData),'utf8',function (err) {
+            if (err) {
+              console.log(err);
+              return false
+            }
+          });
+        console.log(key + " is changed to: "+ parsedData.key);   
+   })
+   return true;
+}
+
+
 function setCameraIpAddress(ip) {
     ewcsStatus.cameraIpAddress = ip;
     fs.readFile('/home/pi/EWCSData/config.json', 'utf8', (error, data) => {
@@ -584,7 +606,7 @@ export function setDataSavePeriod(period){
         if (period >= 10 && period <= 1000){
             ewcsStatus.dataSavePeriod = period;
             // save to config.json
-
+            saveConfig("dataSavePeriod",parseInt(ewcsStatus.dataSavePeriod));
             return true;
         }
     }
@@ -600,7 +622,7 @@ export function setImageSavePeriod(period){
         if (period >= 10 && period <= 1000){
             ewcsStatus.imageSavePeriod = period;
             // save to config.json
-            
+            saveConfig("imageSavePeriod",parseInt(ewcsStatus.imageSavePeriod));
             return true;
         }
     }
