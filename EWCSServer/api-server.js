@@ -1,6 +1,6 @@
 import express from 'express';
 import { DB } from './db.js';
-import { iridiumOn,iridiumOff , setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus,poeReset,setMode,getMode,getCs125OnStatus,getCs125HoodHeaterStatus, getPoeOnStatus,getIridiumOnStatus,setCameraIpAddress, getCameraIpAddress, ewcsDataNow,ewcsStatusNow } from './ewcs.js';
+import { iridiumOn,iridiumOff , setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus,poeReset,setMode,getMode,getCs125OnStatus,getCs125HoodHeaterStatus, getPoeOnStatus,getIridiumOnStatus,setCameraIpAddress, getCameraIpAddress, ewcsDataNow,ewcsStatusNow, setDataSavePeriod,getDataSavePeriod,setImageSavePeriod,getImageSavePeriod } from './ewcs.js';
 import { reboot } from './reboot.js';
 import { changeSystemIp, changeCouchDbIp, getPublicIp,getLocalIp} from './ip.js';
 
@@ -187,6 +187,35 @@ export default function ApiServer(ewcsData, ewcsImageData) {
           return res.json({cameraip: `${ip}`});
       });
 
+      router.get('/set/period/data', function(req, res) {
+        const period = req.query.period
+        let result = false;
+        console.log("asked to set data save period "+period);
+        if (period) {
+          result = setDataSavePeriod(`${period}`);
+        }
+        return res.json({ result: `new data save period is set ${result}`})
+      });
+
+      router.get('/get/period/data',  function(req, res) {
+        const period =  getDataSavePeriod();
+          return res.json({dataSavePeriod: `${period}`});
+      });
+
+      router.get('/set/period/image', function(req, res) {
+        const period = req.query.period
+        let result = false;
+        console.log("asked to set data save period "+period);
+        if (period) {
+          result = setImageSavePeriod(`${period}`);
+        }
+        return res.json({ result: `new image save period is set ${result}`})
+      });
+
+      router.get('/get/period/image',  function(req, res) {
+        const period =  getImageSavePeriod();
+          return res.json({imageSavePeriod: `${period}`});
+      });
  
      router.get('/get/ip/public', async function(req, res) {
       const ip = await getPublicIp();

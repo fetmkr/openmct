@@ -44,7 +44,9 @@ let ewcsStatus = {
     iridiumOnStatus: 0,
     ipAddress:"",
     gateway:"",
-    cameraIpAddress:""
+    cameraIpAddress:"",
+    dataSavePeriod: 60,
+    imageSavePeriod: 100
 };
 
 function setEWCSTime(){
@@ -577,6 +579,39 @@ function getCameraIpAddress() {
     return ewcsStatus.cameraIpAddress;
 }
 
+export function setDataSavePeriod(period){
+    if(Number.isInteger(parseInt(period))){
+        if (period >= 10 && period <= 1000){
+            ewcsStatus.dataSavePeriod = period;
+            // save to config.json
+
+            return true;
+        }
+    }
+    return false;
+}
+
+export function getDataSavePeriod() {
+    return ewcsStatus.dataSavePeriod;
+}
+
+export function setImageSavePeriod(period){
+    if(Number.isInteger(parseInt(period))){
+        if (period >= 10 && period <= 1000){
+            ewcsStatus.imageSavePeriod = period;
+            // save to config.json
+            
+            return true;
+        }
+    }
+    return false;
+    
+}
+
+export function getImageSavePeriod() {
+    return ewcsStatus.imageSavePeriod;
+}
+
 function EWCS(db) {
     this.state = {
         "ewcs.cs125.current": 0,
@@ -699,6 +734,8 @@ async function initEWCS()
         ewcsStatus.ipAddress = parsedData.ipAddress;
         ewcsStatus.gateway = parsedData.gateway;
         ewcsStatus.cameraIpAddress = parsedData.cameraIpAddress;
+        ewcsStatus.dataSavePeriod = parsedData.dataSavePeriod;
+        ewcsStatus.imageSavePeriod = parsedData.imageSavePeriod;
 
         console.log("current rpi ip address: "+ ewcsStatus.ipAddress);
         console.log("current rpi ip gateway: "+ ewcsStatus.gateway);
