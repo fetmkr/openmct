@@ -12,7 +12,7 @@ import StaticServer from './static-server.js';
 import ImageServer from './image-server.js';
 import ApiServer from './api-server.js';
 
-import extractFrame  from 'ffmpeg-extract-frame';
+// import extractFrame  from 'ffmpeg-extract-frame';
 
 import { DB } from './db.js';
 
@@ -60,27 +60,27 @@ const main = async () => {
 
 main();
 
-async function f1() {
-    const now = Date.now()
-    let path = `./ewcsimage/${now}.jpg`;
-    let camerapath = 'rtsp://admin:kopriControl2022@' + getCameraIpAddress() +':554/Streaming/Channels/101';
-    console.log("camera path"+camerapath);
-    // const ewcsImageData = await new DB().create('ewcs-image')
-    // new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
-    try {
-        await extractFrame({
-                //input: 'rtsp://admin:kopriControl2022@192.168.0.12:554/Streaming/Channels/101',
-                input: camerapath,
-                quality: 31,
-                output: path
-            });
-        const ewcsImageData = await new DB().create('ewcs-image')
-        new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
-        console.log("ewcs image saved at: ", Date(Date.now()));
-    }  catch (e) {
-        console.log(e);
-    }
-}
+// async function f1() {
+//     const now = Date.now()
+//     let path = `./ewcsimage/${now}.jpg`;
+//     let camerapath = 'rtsp://admin:kopriControl2022@' + getCameraIpAddress() +':554/Streaming/Channels/101';
+//     console.log("camera path"+camerapath);
+//     // const ewcsImageData = await new DB().create('ewcs-image')
+//     // new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
+//     try {
+//         await extractFrame({
+//                 //input: 'rtsp://admin:kopriControl2022@192.168.0.12:554/Streaming/Channels/101',
+//                 input: camerapath,
+//                 quality: 31,
+//                 output: path
+//             });
+//         const ewcsImageData = await new DB().create('ewcs-image')
+//         new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
+//         console.log("ewcs image saved at: ", Date(Date.now()));
+//     }  catch (e) {
+//         console.log(e);
+//     }
+// }
 
 
 
@@ -91,15 +91,15 @@ async function f1() {
 //setInterval(f1,100000);
 
 
-function startImageSaveTimer(){
+// function startImageSaveTimer(){
 
-    const interval = parseInt(getImageSavePeriod())* 1000;
+//     const interval = parseInt(getImageSavePeriod())* 1000;
 
-    //console.log("image save period: "+ parseInt(getImageSavePeriod()).toString()+" seconds");
-    console.log("ewcs image saving.. ")
-    f1();
+//     //console.log("image save period: "+ parseInt(getImageSavePeriod()).toString()+" seconds");
+//     console.log("ewcs image saving.. ")
+//     f1();
 
-    const a = setTimeout(startImageSaveTimer,interval);
-}
+//     const a = setTimeout(startImageSaveTimer,interval);
+// }
 
-startImageSaveTimer();
+// startImageSaveTimer();

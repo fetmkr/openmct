@@ -8,6 +8,8 @@ import crc16ccitt from 'crc/crc16ccitt';
 import fs from  'fs';
 import CronJob from 'cron';
 import { readFile, writeFile } from "fs";
+import extractFrame  from 'ffmpeg-extract-frame';
+
 
 const job = new CronJob.CronJob(
 	'0 0 * * * ',
@@ -717,6 +719,7 @@ function EWCS(db) {
     // }.bind(this), 60*1000);
     
     startDataSaveTimer(db);
+    startImageSaveTimer();
 
 };
 
@@ -831,5 +834,37 @@ setInterval(checkNetworkConnection, 5000);
 
 export {EWCS, readADC, updateRN171, setEWCSTime, ewcsDataNow, ewcsStatusNow, setStationName, getStationName, cs125On, cs125Off, CS125HoodHeaterOn, CS125HoodHeaterOff, CS125GetStatus, iridiumOn, iridiumOff, sendIridium, poeReset,setMode, getMode, getCs125OnStatus,getCs125HoodHeaterStatus, getPoeOnStatus,getIridiumOnStatus, setCameraIpAddress, getCameraIpAddress};
 
+async function f1() {
+    const now = Date.now()
+    let path = `./ewcsimage/${now}.jpg`;
+    let camerapath = 'rtsp://admin:kopriControl2022@' + getCameraIpAddress() +':554/Streaming/Channels/101';
+    console.log("camera path"+camerapath);
+    // const ewcsImageData = await new DB().create('ewcs-image')
+    // new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
+    try {
+        await extractFrame({
+                //input: 'rtsp://admin:kopriControl2022@192.168.0.12:554/Streaming/Channels/101',
+                input: camerapath,
+                quality: 31,
+                output: path
+            });
+        const ewcsImageData = await new DB().create('ewcs-image')
+        new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
+        console.log("ewcs image saved at: ", Date(Date.now()));
+    }  catch (e) {
+        console.log(e);
+    }
+}
+
  
+function startImageSaveTimer(){
+
+    const interval = parseInt(getImageSavePeriod())* 1000;
+
+    //console.log("image save period: "+ parseInt(getImageSavePeriod()).toString()+" seconds");
+    console.log("ewcs image saving.. ")
+    f1();
+
+    const a = setTimeout(startImageSaveTimer,interval);
+}
 
