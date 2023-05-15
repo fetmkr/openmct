@@ -4,7 +4,7 @@
 
 // import EWCS from './ewcs.js';
 
-import {EWCS, updateRN171,getCameraIpAddress} from './ewcs.js'
+import {EWCS, updateRN171,getCameraIpAddress,getDataSavePeriod,getImageSavePeriod} from './ewcs.js'
 
 import RealtimeServer from './realtime-server.js';
 import HistoryServer from './history-server.js';
@@ -18,6 +18,7 @@ import { DB } from './db.js';
 
 import expressWs from 'express-ws';
 import express from 'express';
+import { time } from 'cron';
 const app = express();
 
 expressWs(app);
@@ -75,10 +76,30 @@ async function f1() {
             });
         const ewcsImageData = await new DB().create('ewcs-image')
         new DB().insertAsync(ewcsImageData, { timestamp: now, value: `${now}.jpg` });
-        console.log("ewcs image saved");
+        console.log("ewcs image saved at: ", Date(Date.now()));
     }  catch (e) {
         console.log(e);
     }
 }
 
-setInterval(f1,100000);
+
+
+// function timestampPrint() {
+//     console.log(Date(Date.now()));
+// }
+
+//setInterval(f1,100000);
+
+
+function startImageSaveTimer(){
+
+    const interval = parseInt(getImageSavePeriod())* 1000;
+
+    //console.log("image save period: "+ parseInt(getImageSavePeriod()).toString()+" seconds");
+    console.log("ewcs image saving.. ")
+    f1();
+
+    const a = setTimeout(startImageSaveTimer,interval);
+}
+
+startImageSaveTimer();

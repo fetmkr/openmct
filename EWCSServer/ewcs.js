@@ -570,7 +570,7 @@ function saveConfig(key, value)
               return false
             }
           });
-        console.log(key + " is changed to: "+ parsedData.key);   
+        console.log(key + " is changed to: "+ parsedData[key]);   
    })
    return true;
 }
@@ -634,6 +634,19 @@ export function getImageSavePeriod() {
     return ewcsStatus.imageSavePeriod;
 }
 
+
+function startDataSaveTimer(db){
+
+    const interval = parseInt(getDataSavePeriod())* 1000;
+
+    //console.log("data save period: "+ parseInt(getDataSavePeriod()).toString()+" seconds");
+    console.log("ewcs data saving.. ")
+    new DB().insertAsync(db, { ... ewcsData });
+
+    const a = setTimeout(startDataSaveTimer,interval,db);
+}
+
+
 function EWCS(db) {
     this.state = {
         "ewcs.cs125.current": 0,
@@ -664,10 +677,12 @@ function EWCS(db) {
     }.bind(this), 1000);
 
     // save ewcs data to database every 60 seconds
-    setInterval(function () {
-        new DB().insertAsync(db, { ... ewcsData });
-    }.bind(this), 60*1000);
- 
+    // setInterval(function () {
+    //     new DB().insertAsync(db, { ... ewcsData });
+    // }.bind(this), 60*1000);
+    
+    startDataSaveTimer(db);
+
 };
 
 EWCS.prototype.updateState = function () {

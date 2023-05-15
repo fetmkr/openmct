@@ -54,7 +54,7 @@ function DB() {
         return;
       }
       //console.log(b);
-      console.log("ewcs data saved")
+      console.log("couchdb data inserted.")
     })
   }
   
