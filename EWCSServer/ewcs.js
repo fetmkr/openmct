@@ -54,8 +54,8 @@ function setEWCSTime(){
 }
 
 function updateRN171(temp, humidity){
-    ewcsData.rn171Temp = temp;
-    ewcsData.rn171Humidity = humidity;
+    ewcsData.rn171Temp = parseFloat(temp);
+    ewcsData.rn171Humidity = parseFloat(humidity);
     //console.log('RN171 Temp: ' + temp);
     //console.log('RN171 Humidity: ' + humidity);
 }
@@ -185,23 +185,23 @@ function checkNetworkConnection() {
 function readADC() {
     cs125CurrentADCChan.read((err, reading) => {
         if (err) throw err;
-        ewcsData.cs125Current = parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3);
+        ewcsData.cs125Current = parseFloat(parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3));
         //console.log('cs125 Current: '+ ewcsData.cs125Current + ' A');
     });
     iridiumCurrentADCChan.read((err, reading) => {
         if (err) throw err;
-        ewcsData.iridiumCurrent = parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3);
+        ewcsData.iridiumCurrent = parseFloat(parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3));
         //console.log('iridium Current: '+ ewcsData.iridiumCurrent + ' A');
     });
     poeCurrentADCChan.read((err, reading) => {
         if (err) throw err;
-        ewcsData.poeCurrent = parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3);
+        ewcsData.poeCurrent = parseFloat(parseFloat((reading.rawValue * 3.3 / 1024)*20000/1000).toFixed(3));
         //console.log('poe Current: '+ ewcsData.poeCurrent + ' A');
 
     });
     batteryVoltageADCChan.read((err, reading) => {
         if (err) throw err;
-        ewcsData.batteryVoltage = parseFloat((reading.rawValue * 3.3 / 1024) * 46 / 10).toFixed(3);
+        ewcsData.batteryVoltage = parseFloat(parseFloat((reading.rawValue * 3.3 / 1024) * 46 / 10).toFixed(3));
         //console.log('Input Voltage: ' + ewcsData.batteryVoltage +' V');
         // console.log(reading.rawValue);
     });
