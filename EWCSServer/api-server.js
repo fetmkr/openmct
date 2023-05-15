@@ -95,7 +95,8 @@ export default function ApiServer(ewcsData, ewcsImageData) {
       });
 
       router.get('/get/cs125/heater/status', async function(req,res){
-        const status = getCs125HoodHeaterStatus();
+        //const status = getCs125HoodHeaterStatus();
+        const status = await CS125GetStatus();
         return res.json({cs125HoodHeaterStatus: status});
       });
 

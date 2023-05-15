@@ -98,7 +98,24 @@ parser2.on('data', (line) => {
         //console.log("cs125 temp: ", ewcsData.cs125Temp);
         //console.log("cs125 humidity: ", ewcsData.cs125Humidity);
     }
-    else(console.log(line))
+    else if (parseInt(data[0][1]) == 0 && getMsgSent == 1){
+        getMsgSent = 0;
+        getMsgRcvd = 1;
+        // GET message check
+        console.log(line)
+        if (parseInt(data[17]) == 0 ){
+            // hood heater is on
+            console.log("cs125 hood heater is ON")
+            ewcsStatus.cs125HoodHeaterStatus = 1;
+        }
+        else {
+            // hood heater is off
+            console.log("cs125 hood heater is OFF")
+            ewcsStatus.cs125HoodHeaterStatus = 0;
+
+        }
+    
+    }
 });
 
 
@@ -121,14 +138,32 @@ function CS125HoodHeaterOff()
 
 }
 
+
+
+let getMsgSent = 0;
+let getMsgRcvd = 0;
+
 function CS125GetStatus()
 {
     let getBuffer = Buffer.from([0x02]);
     getBuffer = Buffer.concat([getBuffer,Buffer.from('GET:0:0')]);
     getBuffer = Buffer.concat([getBuffer,Buffer.from(':'),Buffer.from(crc16ccitt(getBuffer).toString(16)),Buffer.from(':'),Buffer.from([0x03,0x0D,0x0A])]);
     port2.write(getBuffer);
-    console.log("CS125 status check serial send: ");
-    return true;
+    console.log("CS125 status checking.. : ");
+    getMsgSent = 1;
+    let val;
+
+    return new Promise(resolve => {
+        setTimeout(() => {
+            if (parseInt(ewcsStatus.cs125HoodHeaterStatus)==1){
+                val = 1;
+            }
+            else {val = 0;}
+            getMsgRcvd = 0;
+            console.log("CS125 status checked");
+            resolve(val);
+        },200);
+    });
 }
 
 // iridium port
